@@ -1,0 +1,35 @@
+---
+import SecondaryButton from "../ui/SecondaryButton.astro";
+
+---
+<section class="mx-auto px-4 md:py-8 w-full max-w-screen-2xl">
+    <div class="mx-auto mb-4 lg:mb-10">
+        <h1 class="text-[#663300] text-2xl font-bold">
+            Receta de la semana
+        </h1>
+        <video src="https://videos.pexels.com/video-files/8943211/8943211-hd_1920_1080_30fps.mp4" controls class="w-full"></video>
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_2fr] gap-6 mt-8">
+            <img 
+                src="https://images.pexels.com/photos/8942902/pexels-photo-8942902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                width="700"
+                height="700"
+                alt="Ingredientes principales para la receta" 
+                class="w-full h-auto object-fit"
+                loading="lazy"
+            >
+            <img 
+                src="https://images.pexels.com/photos/6167328/pexels-photo-6167328.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                width="700"
+                height="700"
+                alt="Preparación paso a paso" 
+                class="w-full h-auto object-fit"
+                loading="lazy"
+            >
+            <article class="flex flex-col justify-center ml-5">
+                <p class="text-base mb-4 lg:mb-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis vehicula sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi lobortis leo ligula, a sollicitudin erat volutpat in. Proin sit amet neque ac justo cursus dapibus. In sit amet dolor finibus, dapibus diam at, tempus elit. Proin ut ante ac augue suscipit tincidunt. Curabitur sagittis, elit quis auctor rutrum, tortor tellus interdum eros, in accumsan neque lacus eu tortor. Sed eget sapien vulputate, faucibus lorem non, fringilla ex. Mauris malesuada pulvinar nibh non consectetur. Sed tincidunt egestas sollicitudin.</p>
+                <p class="text-base mb-4 lg:mb-10">Mauris non ligula molestie, pharetra nulla at, pharetra orci. In ac tincidunt nibh, nec interdum neque. Nam quis molestie massa. Aliquam erat volutpat. Nullam sit amet urna ac turpis imperdiet auctor at eu neque. Quisque auctor blandit magna quis fermentum. Donec blandit erat vitae dui semper ultricies. Donec egestas, mi vitae convallis cursus, ligula sapien mattis elit, sit amet fermentum magna nibh et ligula. Ut mi dolor, elementum mollis libero ac, pulvinar tempor nunc.</p>
+                <SecondaryButton>Ver completo</SecondaryButton>
+            </article>
+        </div>
+    </div>
+</section>

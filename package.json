@@ -9,7 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/vercel": "^8.1.4",
-    "astro": "^5.7.7"
+    "@astrojs/vercel": "^8.0.4",
+    "@tailwindcss/vite": "^4.1.4",
+    "astro": "^5.7.7",
+    "astro-icon": "^1.1.5",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3"
   }
 }

@@ -1,16 +1,24 @@
 ---
-
+import Hero from "../components/home/Hero.astro";
+import Products from "../components/home/Products.astro";
+import BestSellers from "../components/home/BestSellers.astro";
+import PublicLayout from "../layouts/PublicLayout.astro"; 
+import Recipe from "../components/home/Recipe.astro";
+import Testimonials from "../components/home/Testimonials.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<PublicLayout title="Home">
+	<Hero></Hero>
+	<div class="mx-auto px-4 py-8 w-full max-w-screen-2xl grid grid-cols-1 lg:grid-cols-2 items-center md:mb-10">
+		<div class="lg:pr-12">
+			<h1 class="text-[#663300] text-2xl font-bold mb-4 lg:mb-10">Quienes somos</h1>
+			<p class="text-base leading-relaxed mb-4 lg:mb-10">Duis lacinia mauris ut sem suscipit cursus. Praesent tincidunt dolor eget pretium porttitor. Nam malesuada ipsum quis ligula porttitor placerat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Morbi maximus auctor commodo.</p>
+			<p class="text-base">Praesent rutrum purus ligula, fringilla dignissim eros pellentesque sit amet. Integer vel odio rhoncus, dapibus felis ut, venenatis arcu. Donec dapibus varius ligula et malesuada.</p>
+		</div>
+		<img src="https://images.pexels.com/photos/5429267/pexels-photo-5429267.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hero Image" class="w-full h-auto mt-0 lg:ms-auto shadow-lg lg:max-w-md object-cover" />
+	</div>
+	<Products></Products>
+	<BestSellers></BestSellers>
+	<Recipe></Recipe>
+	<Testimonials></Testimonials>
+</PublicLayout>
