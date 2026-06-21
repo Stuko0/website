@@ -1,0 +1,9 @@
+{
+  "name": "Chocolate Amargo 70%",
+  "slug": "chocolate-amargo-70",
+  "description": "Chocolate negro premium con 70% de cacao puro de origen único",
+  "price": 35,
+  "category": "chocolates",
+  "image": "https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  "visible": true
+}

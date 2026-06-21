@@ -9,13 +9,17 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/vercel": "^8.0.4",
-    "@tailwindcss/vite": "^4.1.4",
-    "astro": "^5.7.7",
+    "@astrojs/vercel": "^10.0.8",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.4.4",
     "astro-icon": "^1.1.5",
-    "tailwindcss": "^4.1.4"
+    "pocketbase": "^0.27.0",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3"
+  },
+  "overrides": {
+    "path-to-regexp": "6.3.0"
   }
 }

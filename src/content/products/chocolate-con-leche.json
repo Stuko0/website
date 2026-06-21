@@ -1,0 +1,9 @@
+{
+  "name": "Chocolate con Leche",
+  "slug": "chocolate-con-leche",
+  "description": "Chocolate suave con leche cremosa y cacao seleccionado",
+  "price": 30,
+  "category": "chocolates",
+  "image": "https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  "visible": true
+}

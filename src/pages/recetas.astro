@@ -1,0 +1,51 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { getCollection } from "astro:content"
+
+const allRecipes = await getCollection("recipes")
+const recipes = allRecipes.filter(r => r.data.published).map(r => ({
+  title: r.data.title,
+  slug: r.data.slug,
+  excerpt: r.data.summary,
+  image: r.data.image || "",
+  time: r.data.prep_time,
+  difficulty: r.data.difficulty,
+}))
+---
+
+<PublicLayout title="Recetas">
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">Recetas</span>
+      </nav>
+      <h1 class="font-heading text-4xl text-accent">Recetas con Cacao</h1>
+      <p class="text-cream/80 mt-2 max-w-2xl">Descubre deliciosas recetas elaboradas con nuestros productos de cacao.</p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {recipes.map(r => (
+        <a href={`/recetas/${r.slug}`} class="group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white">
+          <div class="overflow-hidden">
+            <img src={r.image} alt={r.title} class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          </div>
+          <div class="p-5">
+            <div class="flex gap-3 text-xs text-muted mb-2">
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                {r.time}
+              </span>
+              <span class="px-2 py-0.5 bg-accent/20 text-primary rounded-full">{r.difficulty}</span>
+            </div>
+            <h3 class="text-xl font-semibold text-primary group-hover:text-accent transition-colors mb-2">{r.title}</h3>
+            <p class="text-muted text-sm">{r.excerpt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</PublicLayout>

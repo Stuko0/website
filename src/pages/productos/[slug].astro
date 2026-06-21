@@ -1,0 +1,137 @@
+---
+import PublicLayout from "../../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+
+export async function getStaticPaths() {
+  const products = [
+    { id: 1, name: "Chocolate Amargo 70%", price: 35, slug: "chocolate-amargo-70", category: "Chocolate", description: "Chocolate amargo con 70% de contenido de cacao. Intenso, con notas afrutadas y un final persistente.", images: ["https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/6261692/pexels-photo-6261692.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/65882/chocolate-dark-coffee-confiserie-65882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+    { id: 2, name: "Cacao en Polvo Orgánico", price: 45, slug: "cacao-polvo-organico", category: "Cacao en polvo", description: "Cacao en polvo 100% orgánico, sin azúcares añadidos. Perfecto para repostería y bebidas.", images: ["https://images.pexels.com/photos/4110096/pexels-photo-4110096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/4110089/pexels-photo-4110089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+    { id: 3, name: "Manteca de Cacao Pura", price: 55, slug: "manteca-cacao-pura", category: "Manteca de cacao", description: "Manteca de cacao pura, prensada en frío. Ideal para cosmética natural y repostería.", images: ["https://images.pexels.com/photos/10823180/pexels-photo-10823180.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/4113290/pexels-photo-4113290.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+    { id: 4, name: "Nibs de Cacao Tostado", price: 40, slug: "nibs-cacao-tostado", category: "Nibs", description: "Nibs de cacao orgánico tostados crocantes. Superfood rico en antioxidantes y magnesio.", images: ["https://images.pexels.com/photos/65882/chocolate-dark-coffee-confiserie-65882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/6261618/pexels-photo-6261618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+    { id: 5, name: "Bombones Rellenos Surtidos", price: 65, slug: "bombones-rellenos-surtidos", category: "Bombones", description: "Caja de bombones artesanales con rellenos de ganache, praliné y frutos secos.", images: ["https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/10303625/pexels-photo-10303625.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+    { id: 6, name: "Chocolate con Leche Artesanal", price: 30, slug: "chocolate-leche-artesanal", category: "Chocolate", description: "Chocolate con lecre cremoso y suave, elaborado con leche de la región y cacao fino.", images: ["https://images.pexels.com/photos/6261691/pexels-photo-6261691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/8900912/pexels-photo-8900912.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/50707/cocoa-man-colombia-peasant-50707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"] },
+  ]
+  return products.map(p => ({
+    params: { slug: p.slug },
+    props: { product: p }
+  }))
+}
+
+const { product } = Astro.props
+const relatedProducts = [
+  { name: "Chocolate Amargo 70%", price: 35, slug: "chocolate-amargo-70", image: "https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+  { name: "Nibs de Cacao Tostado", price: 40, slug: "nibs-cacao-tostado", image: "https://images.pexels.com/photos/65882/chocolate-dark-coffee-confiserie-65882.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+  { name: "Bombones Rellenos", price: 65, slug: "bombones-rellenos-surtidos", image: "https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+].filter(r => r.slug !== product.slug).slice(0, 3)
+---
+
+<PublicLayout title={product.name}>
+  <!-- Breadcrumbs -->
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <a href="/productos" class="hover:text-accent">Productos</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">{product.name}</span>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-10">
+      <!-- Galería -->
+      <div class="w-full lg:w-1/2">
+        <div class="rounded-lg overflow-hidden shadow-lg mb-4">
+          <img src={product.images[0]} alt={product.name} class="w-full h-[400px] lg:h-[500px] object-cover" />
+        </div>
+        <div class="flex gap-3 overflow-x-auto pb-2">
+          {product.images.map(img => (
+            <img src={img} alt={product.name} class="w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-accent transition-colors shrink-0" />
+          ))}
+        </div>
+      </div>
+
+      <!-- Info del producto -->
+      <div class="w-full lg:w-1/2">
+        <span class="text-sm uppercase tracking-wider text-accent font-semibold">{product.category}</span>
+        <h1 class="font-heading text-4xl lg:text-5xl text-primary mt-1 mb-4">{product.name}</h1>
+        <p class="text-3xl font-bold text-body mb-6">Bs {product.price.toFixed(2)}</p>
+        <p class="text-muted leading-relaxed mb-8">{product.description}</p>
+
+        <!-- Variante (placeholder) -->
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-muted mb-2">Presentación</label>
+          <div class="flex gap-2">
+            <span class="px-4 py-2 border-2 border-accent rounded text-primary font-semibold cursor-pointer">100g</span>
+            <span class="px-4 py-2 border-2 border-border rounded text-muted hover:border-accent cursor-pointer">250g</span>
+            <span class="px-4 py-2 border-2 border-border rounded text-muted hover:border-accent cursor-pointer">500g</span>
+          </div>
+        </div>
+
+        <!-- Cantidad + Add to cart -->
+        <div class="flex items-center gap-4 mb-8">
+          <div class="flex items-center border-2 border-border rounded">
+            <button class="px-4 py-2 text-lg hover:bg-accent/20 transition-colors">-</button>
+            <span class="px-4 py-2 text-lg font-semibold border-x-2 border-border">1</span>
+            <button class="px-4 py-2 text-lg hover:bg-accent/20 transition-colors">+</button>
+          </div>
+          <button class="flex-1 bg-primary text-cream px-6 py-3 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+            <Icon name="mdi:cart" class="inline-block mr-2" />Agregar al Carrito
+          </button>
+        </div>
+
+        <!-- Wishlist + Share -->
+        <div class="flex gap-4 text-sm text-muted">
+          <button class="flex items-center gap-1 hover:text-accent transition-colors">
+            <Icon name="mdi:heart-outline" />Añadir a favoritos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs (Descripción / Info adicional) -->
+    <div class="mt-16 border-t border-border pt-8">
+      <div class="flex gap-8 border-b border-border mb-6">
+        <button class="pb-3 border-b-2 border-accent text-primary font-semibold">Descripción</button>
+        <button class="pb-3 text-muted hover:text-primary">Información adicional</button>
+      </div>
+      <p class="text-muted leading-relaxed max-w-3xl">
+        {product.description} Elaborado con cacao fino de aroma cultivado en las tierras altas de Bolivia. 
+        Procesado artesanalmente para preservar sus propiedades organolépticas únicas. 
+        Libre de aditivos y conservantes artificiales.
+      </p>
+      <table class="mt-6 text-muted">
+        <tr class="border-b border-border">
+          <td class="py-2 pr-8 font-semibold">Peso</td>
+          <td class="py-2">100g / 250g / 500g</td>
+        </tr>
+        <tr class="border-b border-border">
+          <td class="py-2 pr-8 font-semibold">Origen</td>
+          <td class="py-2">Bolivia</td>
+        </tr>
+        <tr class="border-b border-border">
+          <td class="py-2 pr-8 font-semibold">Categoría</td>
+          <td class="py-2">{product.category}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Productos relacionados -->
+    <div class="mt-16">
+      <h2 class="font-heading text-3xl text-heading mb-6">Productos Relacionados</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {relatedProducts.map(rp => (
+          <a href={`/productos/${rp.slug}`} class="group">
+            <div class="rounded-lg overflow-hidden mb-3">
+              <img src={rp.image} alt={rp.name} class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <h4 class="font-semibold text-primary group-hover:text-accent transition-colors">{rp.name}</h4>
+            <p class="text-muted">Bs {rp.price.toFixed(2)}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</PublicLayout>

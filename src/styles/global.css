@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito Sans", sans-serif;
+  --font-heading: "Dancing Script", cursive;
+
+  --color-primary: #703f07;
+  --color-primary-light: #8a5e1e;
+  --color-accent: #f0c76e;
+  --color-accent-light: #ffcc66;
+  --color-accent-orange: #ffb042;
+  --color-heading: #663300;
+  --color-body: #1a1a1a;
+  --color-muted: #474747;
+  --color-border: #e9e9e9;
+  --color-cream: #fefdf7;
+  --color-brown-light: #ba8d69;
+}

@@ -1,0 +1,108 @@
+---
+import { Icon } from 'astro-icon/components'
+---
+
+<nav id="mainNav" class="block w-full max-w-screen px-4 py-2 mx-auto bg-[#663300] bg-opacity-70 absolute top-0 shadow lg:px-8 lg:py-4 backdrop-blur-lg backdrop-saturate-150 z-[9999]">
+  <div class="container flex flex-wrap items-center justify-between mx-auto">
+    <a href="/"
+      class="mr-4 block cursor-pointer py-1.5 text-3xl font-heading text-accent font-semibold">
+      Del Carpio
+    </a>
+    <div class="hidden lg:block">
+      <ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+        <li class="flex items-center p-1 gap-x-2 text-cream text-base hover:text-accent">
+          <a href="/recetas" class="flex items-center">Recetas</a>
+        </li>
+        <li class="flex items-center p-1 text-base hover:text-accent gap-x-2 text-cream">
+          <a href="/productos" class="flex items-center">Productos</a>
+        </li>
+        <li class="flex items-center p-1 text-base hover:text-accent gap-x-2 text-cream">
+          <a href="/informacion" class="flex items-center">Información</a>
+        </li>
+        <li class="flex items-center p-1 text-base hover:text-accent gap-x-2 text-cream">
+          <a href="/ayuda" class="flex items-center">Ayuda</a>
+        </li>
+      </ul>
+    </div>
+    <div class="items-center gap-4 text-cream hidden lg:flex lg:flex-row lg:items-center">
+      <a href="/carrito" class="relative">
+        <Icon name="mdi:shopping-cart" class="hover:text-accent text-3xl cursor-pointer"/>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-accent text-heading text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </a>
+      <div id="auth-section" class="flex items-center gap-2">
+        <a href="/login" id="login-link" class="flex items-center gap-1 hover:text-accent">
+          <Icon name="mdi:account" class="text-3xl cursor-pointer"/>
+          <span class="text-sm">Iniciar Sesión</span>
+        </a>
+        <div id="user-menu" class="hidden flex items-center gap-2">
+          <span id="user-name" class="text-sm"></span>
+          <button id="logout-btn" class="text-sm hover:text-accent">Salir</button>
+        </div>
+      </div>
+    </div>
+    <details
+      class="relative ml-auto select-none text-center align-middle text-3xl disabled:pointer-events-none lg:hidden text-cream group">
+      <summary><Icon name="mdi:hamburger-menu"/></summary>
+      <div class="absolute right-6 top-full mt-2 w-56 rounded-md bg-cream shadow-lg py-2 z-50 text-base">
+        <a href="/recetas" class="block px-4 py-2 text-heading hover:text-accent">Recetas</a>
+        <a href="/productos" class="block px-4 py-2 text-heading hover:text-accent">Productos</a>
+        <a href="/informacion" class="block px-4 py-2 text-heading hover:text-accent">Información</a>
+        <a href="/ayuda" class="block px-4 py-2 text-heading hover:text-accent">Ayuda</a>
+        <div class="border-t my-1"></div>
+        <a href="/carrito" class="px-4 py-2 text-heading hover:text-accent block items-center gap-2">Carrito (<span id="mobile-cart-count">0</span>)</a>
+        <a href="/login" id="mobile-login-link" class="block px-4 py-2 text-heading hover:text-accent">Iniciar Sesión</a>
+        <div id="mobile-user-menu" class="hidden">
+          <span id="mobile-user-name" class="block px-4 py-2 text-heading"></span>
+          <button id="mobile-logout-btn" class="block w-full text-left px-4 py-2 text-heading hover:text-accent">Cerrar Sesión</button>
+        </div>
+      </div>
+    </details>
+  </div>
+</nav>
+
+<script>
+  import { isAuthenticated, currentUser, logout } from '../../lib/pocketbase.ts'
+  import { getCartCount } from '../../lib/cart.ts'
+
+  function updateAuthUI() {
+    const loginLink = document.getElementById('login-link')
+    const userMenu = document.getElementById('user-menu')
+    const userName = document.getElementById('user-name')
+    const mobileLoginLink = document.getElementById('mobile-login-link')
+    const mobileUserMenu = document.getElementById('mobile-user-menu')
+    const mobileUserName = document.getElementById('mobile-user-name')
+
+    if (isAuthenticated()) {
+      const user = currentUser()
+      loginLink?.classList.add('hidden')
+      userMenu?.classList.remove('hidden')
+      userName!.textContent = user?.name || user?.email
+      
+      mobileLoginLink?.classList.add('hidden')
+      mobileUserMenu?.classList.remove('hidden')
+      mobileUserName!.textContent = user?.name || user?.email
+    } else {
+      loginLink?.classList.remove('hidden')
+      userMenu?.classList.add('hidden')
+      mobileLoginLink?.classList.remove('hidden')
+      mobileUserMenu?.classList.add('hidden')
+    }
+  }
+
+  function updateCartCount() {
+    const count = getCartCount()
+    const cartCountEl = document.getElementById('cart-count')
+    const mobileCartCountEl = document.getElementById('mobile-cart-count')
+    
+    if (cartCountEl) cartCountEl.textContent = count.toString()
+    if (mobileCartCountEl) mobileCartCountEl.textContent = count.toString()
+  }
+
+  document.getElementById('logout-btn')?.addEventListener('click', logout)
+  document.getElementById('mobile-logout-btn')?.addEventListener('click', logout)
+
+  updateAuthUI()
+  updateCartCount()
+
+  window.addEventListener('cart-updated', updateCartCount)
+</script>

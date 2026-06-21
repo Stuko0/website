@@ -1,0 +1,162 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+---
+
+<PublicLayout title="Admin Dashboard">
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">Panel de Administración</span>
+      </nav>
+      <h1 class="font-heading text-4xl text-accent">Panel de Administración</h1>
+    </div>
+  </div>
+
+  <div id="admin-content" class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <Icon name="mdi:package-variant" class="text-4xl text-primary" />
+          <span class="text-3xl font-bold text-heading" id="stat-products">0</span>
+        </div>
+        <h3 class="text-muted font-semibold">Productos</h3>
+        <p class="text-sm text-muted/70">Total en catálogo</p>
+      </div>
+
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <Icon name="mdi:cart-check" class="text-4xl text-accent" />
+          <span class="text-3xl font-bold text-heading" id="stat-orders">0</span>
+        </div>
+        <h3 class="text-muted font-semibold">Pedidos</h3>
+        <p class="text-sm text-muted/70">Total de órdenes</p>
+      </div>
+
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <Icon name="mdi:account-group" class="text-4xl text-primary" />
+          <span class="text-3xl font-bold text-heading" id="stat-users">0</span>
+        </div>
+        <h3 class="text-muted font-semibold">Usuarios</h3>
+        <p class="text-sm text-muted/70">Clientes registrados</p>
+      </div>
+
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+          <Icon name="mdi:currency-usd" class="text-4xl text-accent" />
+          <span class="text-3xl font-bold text-heading" id="stat-revenue">0</span>
+        </div>
+        <h3 class="text-muted font-semibold">Ingresos</h3>
+        <p class="text-sm text-muted/70">Total facturado (Bs)</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <h2 class="text-2xl font-heading text-heading mb-4">Últimos Pedidos</h2>
+        <div id="recent-orders" class="space-y-3">
+          <p class="text-muted">Cargando pedidos...</p>
+        </div>
+        <a href="/admin/orders" class="block text-center mt-4 text-primary hover:text-accent transition-colors font-semibold">
+          Ver todos los pedidos →
+        </a>
+      </div>
+
+      <div class="bg-white border-2 border-border rounded-lg p-6">
+        <h2 class="text-2xl font-heading text-heading mb-4">Acciones Rápidas</h2>
+        <div class="space-y-3">
+          <a href="/admin/products" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+            <Icon name="mdi:plus-circle" class="text-2xl text-primary" />
+            <div>
+              <p class="font-semibold text-heading">Agregar Producto</p>
+              <p class="text-sm text-muted">Crear nuevo producto en el catálogo</p>
+            </div>
+          </a>
+          <a href="/admin/recipes" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+            <Icon name="mdi:book-open-variant" class="text-2xl text-primary" />
+            <div>
+              <p class="font-semibold text-heading">Gestionar Recetas</p>
+              <p class="text-sm text-muted">Editar recetas del sitio</p>
+            </div>
+          </a>
+          <a href="/admin/users" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+            <Icon name="mdi:account-cog" class="text-2xl text-primary" />
+            <div>
+              <p class="font-semibold text-heading">Administrar Usuarios</p>
+              <p class="text-sm text-muted">Ver y gestionar cuentas de clientes</p>
+            </div>
+          </a>
+          <a href="http://localhost:8090/_/" target="_blank" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+            <Icon name="mdi:cog" class="text-2xl text-primary" />
+            <div>
+              <p class="font-semibold text-heading">Panel PocketBase</p>
+              <p class="text-sm text-muted">Administrar backend directamente</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="no-access" class="hidden container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto text-center py-20">
+      <Icon name="mdi:lock" class="text-6xl text-border mx-auto mb-4" />
+      <h2 class="text-2xl font-semibold text-heading mb-2">Acceso Denegado</h2>
+      <p class="text-muted mb-6">No tienes permisos para acceder a esta página</p>
+      <a href="/" class="inline-block bg-primary text-cream px-8 py-3 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+        Volver al Inicio
+      </a>
+    </div>
+  </div>
+
+  <script>
+    import pb, { isAuthenticated, isAdmin } from '../lib/pocketbase.ts'
+
+    const adminContent = document.getElementById('admin-content')
+    const noAccess = document.getElementById('no-access')
+
+    if (!isAuthenticated() || !isAdmin()) {
+      adminContent.classList.add('hidden')
+      noAccess.classList.remove('hidden')
+    } else {
+      loadStats()
+    }
+
+    async function loadStats() {
+      try {
+        const products = await pb.collection('products').getList(1, 1)
+        document.getElementById('stat-products').textContent = products.totalItems.toString()
+      } catch (e) {}
+
+      try {
+        const orders = await pb.collection('orders').getList(1, 5, { sort: '-created' })
+        document.getElementById('stat-orders').textContent = orders.totalItems.toString()
+        
+        const recentOrdersEl = document.getElementById('recent-orders')
+        if (orders.items.length === 0) {
+          recentOrdersEl.innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
+        } else {
+          recentOrdersEl.innerHTML = orders.items.map((order: any) => `
+            <div class="flex items-center justify-between p-3 border border-border rounded">
+              <div>
+                <p class="font-semibold text-heading">Pedido #${order.id.slice(0, 8)}</p>
+                <p class="text-sm text-muted">${order.status || 'pending'}</p>
+              </div>
+              <p class="font-bold text-primary">Bs ${order.total?.toFixed(2) || '0.00'}</p>
+            </div>
+          `).join('')
+        }
+      } catch (e) {
+        document.getElementById('recent-orders').innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
+      }
+
+      try {
+        const users = await pb.collection('users').getList(1, 1)
+        document.getElementById('stat-users').textContent = users.totalItems.toString()
+      } catch (e) {}
+    }
+  </script>
+</PublicLayout>

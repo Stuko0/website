@@ -1,0 +1,79 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+
+const faqs = [
+  {
+    q: "¿Hacen envíos a todo Bolivia?",
+    a: "Sí, realizamos envíos a todos los departamentos de Bolivia. Los tiempos de entrega varían según la ubicación: 3-5 días hábiles para ciudades capitales y 5-8 días hábiles para áreas rurales."
+  },
+  {
+    q: "¿Cuál es el costo de envío?",
+    a: "El envío estándar tiene un costo de Bs 15.00 para pedidos dentro de ciudades principales. Para envíos exprés (1-2 días hábiles) el costo es de Bs 35.00. Los pedidos superiores a Bs 200.00 tienen envío gratuito."
+  },
+  {
+    q: "¿Qué métodos de pago aceptan?",
+    a: "Aceptamos transferencia bancaria, tarjetas de crédito/débito (Visa, Mastercard) y pagos por QR mediante aplicaciones móviles."
+  },
+  {
+    q: "¿Puedo comprar al por mayor?",
+    a: "Sí, ofrecemos descuentos por volumen para pedidos al por mayor. Contáctanos a través del formulario de contacto o escribenos a info@delcarpio.com para recibir una cotización personalizada."
+  },
+  {
+    q: "¿Cuánto tiempo dura el chocolate?",
+    a: "Nuestros productos de chocolate tienen una vida útil de 12 meses desde su fecha de elaboración. Recomendamos almacenarlos en un lugar fresco y seco, entre 15°C y 20°C, lejos de la luz directa del sol."
+  },
+  {
+    q: "¿Cómo puedo rastrear mi pedido?",
+    a: "Una vez realizado el pedido, recibirás un correo electrónico con el número de seguimiento. Podrás rastrear tu paquete en la sección 'Mis Pedidos' de tu perfil o a través del enlace incluido en el correo."
+  },
+  {
+    q: "¿Ofrecen devoluciones o cambios?",
+    a: "Sí, aceptamos devoluciones dentro de los 7 días posteriores a la recepción del pedido. El producto debe estar en su empaque original y en perfectas condiciones. Contáctanos para gestionar el proceso de devolución."
+  },
+  {
+    q: "¿Son productos orgánicos?",
+    a: "Todos nuestros productos de cacao en polvo y nibs son 100% orgánicos y libres de aditivos. Nuestros chocolates están elaborados con ingredientes naturales y sin conservantes artificiales."
+  },
+]
+---
+
+<PublicLayout title="Ayuda">
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">Ayuda</span>
+      </nav>
+      <h1 class="font-heading text-4xl text-accent">Preguntas Frecuentes</h1>
+      <p class="text-cream/80 mt-2 max-w-2xl">Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios.</p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8 max-w-3xl">
+    <div class="space-y-4">
+      {faqs.map(faq => (
+        <details class="group border-2 border-border rounded-lg overflow-hidden">
+          <summary class="flex items-center justify-between p-5 cursor-pointer hover:bg-accent/5 transition-colors list-none">
+            <span class="font-semibold text-primary group-open:text-accent transition-colors pr-4">{faq.q}</span>
+            <Icon name="mdi:chevron-down" class="text-xl text-muted group-open:rotate-180 transition-transform shrink-0" />
+          </summary>
+          <div class="px-5 pb-5 text-muted leading-relaxed border-t border-border pt-4">
+            {faq.a}
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <!-- Contacto adicional -->
+    <div class="mt-12 text-center p-8 bg-cream border-2 border-border rounded-lg">
+      <Icon name="mdi:help-circle-outline" class="text-4xl text-accent mx-auto mb-3" />
+      <h2 class="text-xl font-semibold text-heading mb-2">¿No encuentras lo que buscas?</h2>
+      <p class="text-muted mb-4">Contáctanos directamente y te responderemos a la brevedad.</p>
+      <a href="mailto:info@delcarpio.com" class="inline-block bg-primary text-cream px-6 py-3 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+        info@delcarpio.com
+      </a>
+    </div>
+  </div>
+</PublicLayout>

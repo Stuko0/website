@@ -1,0 +1,9 @@
+{
+  "name": "Bombones Rellenos",
+  "slug": "bombones-rellenos",
+  "description": "Bombones artesanales con rellenos variados de licores y frutas",
+  "price": 45,
+  "category": "bombones",
+  "image": "https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+  "visible": true
+}

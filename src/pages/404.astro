@@ -1,0 +1,25 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+---
+
+<PublicLayout title="Página no encontrada">
+  <div class="min-h-[70vh] flex items-center justify-center py-24">
+    <div class="text-center px-4">
+      <p class="text-8xl lg:text-9xl font-heading text-accent mb-4">404</p>
+      <h1 class="font-heading text-3xl lg:text-4xl text-primary mb-4">Página no encontrada</h1>
+      <p class="text-muted text-lg mb-8 max-w-md mx-auto">
+        La página que buscas no existe o ha sido movida. 
+        Revisa la URL o vuelve al inicio.
+      </p>
+      <div class="flex justify-center gap-4">
+        <a href="/" class="bg-primary text-cream px-8 py-3 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+          Volver al Inicio
+        </a>
+        <a href="/productos" class="border-2 border-primary text-primary px-8 py-3 font-bold uppercase tracking-wider hover:bg-primary hover:text-cream transition-colors">
+          Ver Productos
+        </a>
+      </div>
+    </div>
+  </div>
+</PublicLayout>

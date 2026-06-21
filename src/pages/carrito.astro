@@ -1,0 +1,133 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+---
+
+<PublicLayout title="Carrito">
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">Carrito</span>
+      </nav>
+      <h1 class="font-heading text-4xl text-accent">Carrito de Compras</h1>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div id="cart-container">
+      <div class="flex flex-col lg:flex-row gap-8" id="cart-with-items">
+        <div class="flex-1">
+          <div class="hidden md:grid grid-cols-[3fr_1fr_1fr_auto] gap-4 pb-3 border-b border-border text-sm uppercase tracking-wider text-muted font-semibold">
+            <span>Producto</span>
+            <span class="text-center">Precio</span>
+            <span class="text-center">Cantidad</span>
+            <span class="text-right">Subtotal</span>
+          </div>
+          <div id="cart-items-container"></div>
+        </div>
+
+        <aside class="w-full lg:w-80 shrink-0">
+          <div class="bg-cream border-2 border-border rounded-lg p-6 sticky top-28">
+            <h3 class="text-xl font-semibold text-heading mb-4">Resumen</h3>
+            <div class="space-y-3 text-muted">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">Bs 0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Envío</span>
+                <span>Bs 15.00</span>
+              </div>
+              <div class="border-t border-border pt-3 flex justify-between font-bold text-lg text-body">
+                <span>Total</span>
+                <span id="cart-total">Bs 0.00</span>
+              </div>
+            </div>
+            <a href="/checkout" class="block w-full bg-primary text-cream text-center py-3 mt-6 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+              Proceder al Pago
+            </a>
+            <a href="/productos" class="block w-full text-center py-2 mt-2 text-muted hover:text-primary transition-colors text-sm">
+              Seguir comprando
+            </a>
+          </div>
+        </aside>
+      </div>
+
+      <div class="text-center py-20 hidden" id="cart-empty">
+        <Icon name="mdi:cart-outline" class="text-6xl text-border mx-auto mb-4" />
+        <h2 class="text-2xl font-semibold text-heading mb-2">Tu carrito está vacío</h2>
+        <p class="text-muted mb-6">Agrega productos para empezar tu compra</p>
+        <a href="/productos" class="inline-block bg-primary text-cream px-8 py-3 font-bold uppercase tracking-wider hover:bg-primary-light transition-colors">
+          Ver Productos
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { getCart, updateQuantity, removeFromCart, getCartTotal } from '../lib/cart.ts'
+    import { Icon } from 'astro-icon/components'
+
+    function renderCart() {
+      const items = getCart()
+      const container = document.getElementById('cart-items-container')
+      const cartWithItems = document.getElementById('cart-with-items')
+      const cartEmpty = document.getElementById('cart-empty')
+      const subtotalEl = document.getElementById('cart-subtotal')
+      const totalEl = document.getElementById('cart-total')
+
+      if (items.length === 0) {
+        cartWithItems.classList.add('hidden')
+        cartEmpty.classList.remove('hidden')
+        return
+      }
+
+      cartWithItems.classList.remove('hidden')
+      cartEmpty.classList.add('hidden')
+
+      container.innerHTML = items.map(item => `
+        <div class="grid grid-cols-1 md:grid-cols-[3fr_1fr_1fr_auto] gap-4 items-center py-4 border-b border-border" data-item-id="${item.id}">
+          <div class="flex items-center gap-4">
+            <img src="${item.image || '/placeholder-product.jpg'}" alt="${item.name}" class="w-20 h-20 object-cover rounded" />
+            <div>
+              <a href="/productos/${item.slug || item.id}" class="font-semibold text-primary hover:text-accent transition-colors">${item.name}</a>
+              <button onclick="window.removeItem('${item.id}')" class="block text-sm text-muted hover:text-red-500 mt-1 transition-colors">
+                Eliminar
+              </button>
+            </div>
+          </div>
+          <p class="text-center text-muted md:mt-0">Bs ${item.price.toFixed(2)}</p>
+          <div class="flex justify-center">
+            <div class="flex items-center border-2 border-border rounded w-fit">
+              <button onclick="window.updateQty('${item.id}', ${item.quantity - 1})" class="px-3 py-1 hover:bg-accent/20 transition-colors">-</button>
+              <span class="px-3 py-1 border-x-2 border-border">${item.quantity}</span>
+              <button onclick="window.updateQty('${item.id}', ${item.quantity + 1})" class="px-3 py-1 hover:bg-accent/20 transition-colors">+</button>
+            </div>
+          </div>
+          <p class="text-right font-semibold">Bs ${(item.price * item.quantity).toFixed(2)}</p>
+        </div>
+      `).join('')
+
+      const subtotal = getCartTotal()
+      const envio = 15
+      const total = subtotal + envio
+
+      subtotalEl.textContent = `Bs ${subtotal.toFixed(2)}`
+      totalEl.textContent = `Bs ${total.toFixed(2)}`
+    }
+
+    window.updateQty = (id: string, quantity: number) => {
+      updateQuantity(id, quantity)
+      renderCart()
+    }
+
+    window.removeItem = (id: string) => {
+      removeFromCart(id)
+      renderCart()
+    }
+
+    renderCart()
+  </script>
+</PublicLayout>

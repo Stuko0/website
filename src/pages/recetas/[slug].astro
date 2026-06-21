@@ -1,0 +1,163 @@
+---
+import PublicLayout from "../../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+
+export async function getStaticPaths() {
+  const recipes = [
+    {
+      title: "Brownie de Chocolate Amargo", slug: "brownie-chocolate-amargo",
+      image: "https://images.pexels.com/photos/8942902/pexels-photo-8942902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      time: "45 min", difficulty: "Fácil", servings: 8,
+      description: "El brownie perfecto para los amantes del chocolate intenso. Húmedo por dentro, crocante por fuera.",
+      ingredients: ["200g Chocolate Amargo 70% Del Carpio", "150g mantequilla", "3 huevos", "200g azúcar", "100g harina de trigo", "30g cacao en polvo", "1 cdta esencia de vainilla", "1 pizca de sal"],
+      instructions: [
+        "Precalienta el horno a 180°C y engrasa un molde cuadrado de 20cm.",
+        "Derrite el chocolate amargo con la mantequilla a baño María o en microondas. Mezcla hasta obtener una crema homogénea.",
+        "En un bowl grande, bate los huevos con el azúcar hasta que estén espumosos y de color claro.",
+        "Agrega la mezcla de chocolate derretido a los huevos y mezcla suavemente.",
+        "Tamiza la harina, el cacao en polvo y la sal. Incorpóralos a la mezcla con movimientos envolventes.",
+        "Agrega la vainilla y mezcla hasta integrar. No sobrebatas.",
+        "Vierte la mezcla en el molde y hornea por 25-30 minutos. El centro debe estar ligeramente húmedo.",
+        "Deja enfriar completamente antes de cortar en cuadrados. ¡Disfruta!"
+      ],
+      relatedProducts: [
+        { name: "Chocolate Amargo 70%", slug: "chocolate-amargo-70", price: 35, image: "https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+        { name: "Cacao en Polvo Orgánico", slug: "cacao-polvo-organico", price: 45, image: "https://images.pexels.com/photos/4110096/pexels-photo-4110096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      ]
+    },
+    {
+      title: "Chocolate Caliente Artesanal", slug: "chocolate-caliente-artesanal",
+      image: "https://images.pexels.com/photos/6167328/pexels-photo-6167328.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      time: "15 min", difficulty: "Fácil", servings: 2,
+      description: "Una bebida reconfortante hecha con cacao puro. Perfecta para las tardes frías.",
+      ingredients: ["500ml leche entera", "3 cdas Cacao en Polvo Orgánico Del Carpio", "2 cdas azúcar o miel", "1 rama de canela", "1 cdta esencia de vainilla", "Crema batida (opcional)"],
+      instructions: [
+        "Calienta la leche en una olla a fuego medio junto con la rama de canela.",
+        "En un tazón pequeño, mezcla el cacao en polvo con el azúcar.",
+        "Cuando la leche esté caliente (sin hervir), retira la canela y agrega la mezcla de cacao.",
+        "Bate constantemente con un batidor de mano para evitar grumos.",
+        "Cocina por 3-4 minutos hasta que espese ligeramente.",
+        "Agrega la vainilla y mezcla bien.",
+        "Sirve en tazas y decora con crema batida y un toque de cacao en polvo por encima."
+      ],
+      relatedProducts: [
+        { name: "Cacao en Polvo Orgánico", slug: "cacao-polvo-organico", price: 45, image: "https://images.pexels.com/photos/4110096/pexels-photo-4110096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      ]
+    },
+    {
+      title: "Trufas de Cacao y Almendras", slug: "trufas-cacao-almendras",
+      image: "https://images.pexels.com/photos/8942914/pexels-photo-8942914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      time: "30 min", difficulty: "Media", servings: 15,
+      description: "Trufas veganas, saludables y deliciosas. El snack perfecto sin culpa.",
+      ingredients: ["200g almendras peladas", "100g dátiles sin hueso", "3 cdas Cacao en Polvo Orgánico Del Carpio", "2 cdas aceite de coco", "1 cdta esencia de vainilla", "Cacao en polvo extra para rebozar", "Una pizca de sal"],
+      instructions: [
+        "Procesa las almendras en un procesador de alimentos hasta obtener una harina fina.",
+        "Agrega los dátiles, el cacao en polvo, el aceite de coco, la vainilla y la sal.",
+        "Procesa hasta que la mezcla se una y forme una masa homogénea.",
+        "Si está muy seca, agrega 1 cda de agua. Si está muy húmeda, agrega más almendras.",
+        "Forma bolitas del tamaño de una nuez con las manos.",
+        "Reboza cada trufa en cacao en polvo hasta cubrir completamente.",
+        "Refrigera por al menos 30 minutos antes de servir. Se conservan hasta 2 semanas en el refrigerador."
+      ],
+      relatedProducts: [
+        { name: "Cacao en Polvo Orgánico", slug: "cacao-polvo-organico", price: 45, image: "https://images.pexels.com/photos/4110096/pexels-photo-4110096.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+      ]
+    },
+  ]
+  return recipes.map(r => ({
+    params: { slug: r.slug },
+    props: { recipe: r }
+  }))
+}
+
+const { recipe } = Astro.props
+---
+
+<PublicLayout title={recipe.title}>
+  <!-- Breadcrumbs -->
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <a href="/recetas" class="hover:text-accent">Recetas</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">{recipe.title}</span>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <!-- Hero de la receta -->
+    <div class="flex flex-col lg:flex-row gap-8 mb-12">
+      <div class="w-full lg:w-1/2">
+        <img src={recipe.image} alt={recipe.title} class="w-full h-[350px] lg:h-[450px] object-cover rounded-lg shadow-lg" />
+      </div>
+      <div class="w-full lg:w-1/2 flex flex-col justify-center">
+        <h1 class="font-heading text-4xl lg:text-5xl text-primary mb-4">{recipe.title}</h1>
+        <p class="text-muted text-lg leading-relaxed mb-6">{recipe.description}</p>
+        <div class="flex flex-wrap gap-4 text-sm">
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
+            <Icon name="mdi:clock-outline" /> {recipe.time}
+          </span>
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
+            <Icon name="mdi:chef-hat" /> {recipe.difficulty}
+          </span>
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
+            <Icon name="mdi:silverware-variant" /> {recipe.servings} porciones
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-10">
+      <!-- Ingredientes -->
+      <aside class="w-full lg:w-80 shrink-0">
+        <div class="bg-cream border-2 border-border rounded-lg p-6 sticky top-28">
+          <h2 class="text-xl font-semibold text-heading mb-4 flex items-center gap-2">
+            <Icon name="mdi:cart-outline" class="text-accent" /> Ingredientes
+          </h2>
+          <ul class="space-y-2">
+            {recipe.ingredients.map(ing => (
+              <li class="flex items-start gap-2 text-muted">
+                <Icon name="mdi:check-circle-outline" class="text-accent mt-0.5 shrink-0" />
+                <span>{ing}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Instrucciones -->
+      <main class="flex-1">
+        <h2 class="text-2xl font-semibold text-heading mb-6">Instrucciones</h2>
+        <ol class="space-y-6">
+          {recipe.instructions.map((step, i) => (
+            <li class="flex gap-4">
+              <span class="w-10 h-10 rounded-full bg-accent text-primary flex items-center justify-center font-bold shrink-0 mt-0.5">{i + 1}</span>
+              <p class="text-muted leading-relaxed pt-2">{step}</p>
+            </li>
+          ))}
+        </ol>
+      </main>
+    </div>
+
+    <!-- Productos relacionados para la receta -->
+    {recipe.relatedProducts.length > 0 && (
+      <div class="mt-16 border-t border-border pt-8">
+        <h2 class="font-heading text-3xl text-heading mb-6">Productos que necesitarás</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {recipe.relatedProducts.map(p => (
+            <a href={`/productos/${p.slug}`} class="group flex items-center gap-4 border-2 border-border rounded-lg p-4 hover:border-accent transition-colors">
+              <img src={p.image} alt={p.name} class="w-20 h-20 object-cover rounded" />
+              <div>
+                <h4 class="font-semibold text-primary group-hover:text-accent transition-colors">{p.name}</h4>
+                <p class="text-muted">Bs {p.price.toFixed(2)}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</PublicLayout>

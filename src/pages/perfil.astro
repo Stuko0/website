@@ -1,0 +1,121 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro"
+import { Icon } from "astro-icon/components"
+---
+
+<PublicLayout title="Mi Perfil">
+  <div class="bg-primary pt-24 pb-4">
+    <div class="container mx-auto px-4">
+      <nav class="text-sm text-cream/70 mb-2">
+        <a href="/" class="hover:text-accent">Inicio</a>
+        <span class="mx-2">/</span>
+        <span class="text-cream">Mi Perfil</span>
+      </nav>
+      <h1 class="font-heading text-4xl text-accent">Mi Perfil</h1>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Sidebar de navegación -->
+      <aside class="w-full lg:w-64 shrink-0">
+        <nav class="space-y-1">
+          <a href="#datos" class="flex items-center gap-3 px-4 py-3 rounded bg-accent/20 text-primary font-semibold">
+            <Icon name="mdi:account-outline" class="text-xl" /> Mis Datos
+          </a>
+          <a href="#direcciones" class="flex items-center gap-3 px-4 py-3 rounded text-muted hover:bg-accent/10 hover:text-primary transition-colors">
+            <Icon name="mdi:map-marker-outline" class="text-xl" /> Direcciones
+          </a>
+          <a href="#pedidos" class="flex items-center gap-3 px-4 py-3 rounded text-muted hover:bg-accent/10 hover:text-primary transition-colors">
+            <Icon name="mdi:package-variant-closed" class="text-xl" /> Mis Pedidos
+          </a>
+          <a href="/login" class="flex items-center gap-3 px-4 py-3 rounded text-muted hover:bg-red-50 hover:text-red-600 transition-colors">
+            <Icon name="mdi:logout" class="text-xl" /> Cerrar Sesión
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="flex-1">
+        <!-- Mis Datos -->
+        <section id="datos" class="mb-10">
+          <h2 class="text-2xl font-semibold text-heading mb-6">Mis Datos</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-semibold text-muted mb-1">Nombre completo</label>
+              <input type="text" class="w-full px-4 py-2 border-2 border-border rounded focus:border-accent focus:outline-none" value="Juan Pérez" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-semibold text-muted mb-1">Email</label>
+              <input type="email" class="w-full px-4 py-2 border-2 border-border rounded focus:border-accent focus:outline-none" value="juan@ejemplo.com" />
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-semibold text-muted mb-1">Teléfono</label>
+              <input type="tel" class="w-full px-4 py-2 border-2 border-border rounded focus:border-accent focus:outline-none" value="+591 70000000" />
+            </div>
+          </div>
+          <button class="mt-4 bg-primary text-cream px-6 py-2 font-bold uppercase tracking-wider text-sm hover:bg-primary-light transition-colors">
+            Guardar Cambios
+          </button>
+        </section>
+
+        <!-- Direcciones -->
+        <section id="direcciones" class="mb-10">
+          <h2 class="text-2xl font-semibold text-heading mb-6">Mis Direcciones</h2>
+          <div class="border-2 border-border rounded-lg p-4 mb-4 max-w-lg">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-semibold text-primary">Juan Pérez</p>
+                <p class="text-sm text-muted">Calle Principal #123</p>
+                <p class="text-sm text-muted">La Paz, Bolivia</p>
+                <p class="text-sm text-muted">Tel: +591 70000000</p>
+              </div>
+              <div class="flex gap-2">
+                <button class="text-sm text-primary hover:text-accent transition-colors">Editar</button>
+                <button class="text-sm text-muted hover:text-red-500 transition-colors">Eliminar</button>
+              </div>
+            </div>
+          </div>
+          <button class="border-2 border-dashed border-border rounded-lg p-4 text-center text-muted hover:border-accent hover:text-primary transition-colors w-full max-w-lg cursor-pointer">
+            <Icon name="mdi:plus" class="text-2xl mx-auto" />
+            <span class="text-sm">Agregar nueva dirección</span>
+          </button>
+        </section>
+
+        <!-- Mis Pedidos -->
+        <section id="pedidos">
+          <h2 class="text-2xl font-semibold text-heading mb-6">Mis Pedidos</h2>
+          <div class="space-y-4">
+            <div class="border-2 border-border rounded-lg p-4">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <p class="font-semibold text-primary">Pedido #DC-2025-001</p>
+                  <p class="text-sm text-muted">15 de mayo, 2025</p>
+                </div>
+                <span class="px-3 py-1 bg-accent/20 text-primary text-sm font-semibold rounded-full">Entregado</span>
+              </div>
+              <div class="flex items-center gap-3 mb-2">
+                <img src="https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&dpr=1" class="w-12 h-12 object-cover rounded" />
+                <div class="text-sm">
+                  <p class="font-semibold">Chocolate Amargo 70% × 2</p>
+                  <p class="text-muted">Bs 70.00</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <img src="https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&dpr=1" class="w-12 h-12 object-cover rounded" />
+                <div class="text-sm">
+                  <p class="font-semibold">Bombones Rellenos × 1</p>
+                  <p class="text-muted">Bs 65.00</p>
+                </div>
+              </div>
+              <div class="border-t border-border mt-3 pt-3 flex justify-between">
+                <span class="text-sm text-muted">Total: Bs 150.00</span>
+                <a href="#" class="text-sm text-primary hover:text-accent transition-colors font-semibold">Ver detalle</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</PublicLayout>

@@ -1,87 +1,56 @@
 ---
-import '../../public/styles/global.css'
-import { Icon } from 'astro-icon/components'
+import '../styles/global.css'
+import Navbar from '../components/layout/Navbar.astro'
+import Footer from '../components/layout/Footer.astro'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Del Carpio</title>
-	</head>
-	<body class="bg-[#fefdf7]">
-		<nav id="mainNav" class="block w-full max-w-screen px-4 py-2 mx-auto bg-transparent bg-opacity-90 absolute top-0 shadow lg:px-8 lg:py-3 backdrop-blur-lg backdrop-saturate-150 z-[9999]">
-			<div class="container flex flex-wrap items-center justify-between mx-auto">
-			  <a href="#"
-				class="mr-4 block cursor-pointer py-1.5 text-3xl text-[#efc86b] font-semibold">
-				Del Carpio
-			  </a>
-			  <div class="hidden lg:block">
-				<ul class="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-				  <li class="flex items-center p-1 gap-x-2 text-[#fefdf7] text-base hover:text-[#efc86b]">
-					<a href="#" class="flex items-center">Recetas</a>
-				  </li>
-				  <li class="flex items-center p-1 text-base hover:text-[#efc86b] gap-x-2 text-[#fefdf7]">
-					<a href="#" class="flex items-center">Productos</a>
-				  </li>
-				  <li class="flex items-center p-1 text-base hover:text-[#efc86b] gap-x-2 text-[#fefdf7]">
-					<a href="#" class="flex items-center">Informacion</a>
-				  </li>
-				  <li class="flex items-center p-1 text-base hover:text-[#efc86b] gap-x-2 text-[#fefdf7]">
-					<a href="#" class="flex items-center">Docs</a>
-				  </li>
-				</ul>
-			  </div>
-			  <div class="mt-6 mb-4 items-center gap-4 text-[#fefdf7] hidden lg:block">
-				<button type="button">
-					<Icon name="mdi:shopping-cart" class="hover:text-[#efc86b] text-3xl cursor-pointer mr-2"/>
-				</button
-				><button type="button"
-				>
-					<Icon name="mdi:account" class="hover:text-[#efc86b] text-3xl cursor-pointer"/>
-				</button>
-			  </div>
-			  <details
-				class="relative ml-auto select-none text-center align-middle text-3xl disabled:pointer-events-none lg:hidden text-[#fefdf7] group">
-				 <summary><Icon name="mdi:hamburger-menu"/></summary>
-				 <div class="absolute right-6 top-full mt-2 w-56 rounded-md bg-[#fefdf7] shadow-lg py-2 z-50 text-base">
-					<a href="/recetas" class="block px-4 py-2 text-[#703f07] hover:text-[#efc86b]">Recetas</a>
-					<a href="/productos" class="block px-4 py-2 text-[#703f07] hover:text-[#efc86b]">Productos</a>
-					<a href="/informacion" class="block px-4 py-2 text-[#703f07] hover:text-[#efc86b]">Información</a>
-					<div class="border-t my-1"></div>
-					<a href="/carrito" class="px-4 py-2 text-[#703f07] hover:text-[#efc86b] block items-center gap-2">Carrito</a>
-					<a href="/favoritos" class="px-4 py-2 text-[#703f07] hover:text-[#efc86b] block items-center gap-2">Favoritos</a>
-					<a href="/login" class="block px-4 py-2 text-[#703f07] hover:text-[#efc86b]">Iniciar Sesión</a>
-				  </div>
-				</details>
-			</div>
-		  </nav>
-        <slot/>
-		<footer class="bg-[#703f07] text-[#fefdf7] py-4">
-		  <div class="container mx-auto text-center">
-			<p>&copy; 2023 Del Carpio. Todos los derechos reservados.</p>
-			<p>Desarrollado por <a href="https://github.com/Stuko0/" class="text-[#efc86b] hover:underline">Stuko</a></p>
-		  </div>
-		</footer>
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Del Carpio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="bg-cream font-sans text-body flex flex-col min-h-screen">
+    <Navbar />
+    <main class="flex-1 pt-5">
+      <slot/>
+    </main>
+    <Footer />
+  </body>
 </html>
+
 <style is:global>
-	details > summary {
-	  list-style: none;
-	}
-	details > summary::-webkit-details-marker {
-	  display: none;
-	}
-	details[open] summary ~ * {
-	  animation: fadeIn 0.3s ease-in-out;
-	}
-  
-	@keyframes fadeIn {
-	  0% { opacity: 0; transform: translateY(-10px); }
-	  100% { opacity: 1; transform: translateY(0); }
-	}
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+  details[open] summary ~ * {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
 </style>
 
-<script is:inline src="../../public/scripts/navbar.js"></script>
+<script is:inline>
+  window.addEventListener('scroll', function () {
+    const nav = document.getElementById('mainNav');
+    if (window.scrollY > 400) {
+      nav.classList.remove('bg-opacity-70', 'absolute');
+      nav.classList.add('fixed', 'bg-opacity-100');
+      nav.style.backdropFilter = 'none';
+    } else {
+      nav.classList.add('bg-opacity-70', 'absolute');
+      nav.classList.remove('fixed', 'bg-opacity-100');
+      nav.style.backdropFilter = 'blur(12px) saturate(150%)';
+    }
+  });
+</script>
