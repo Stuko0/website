@@ -61,7 +61,7 @@ import { Icon } from 'astro-icon/components'
 </nav>
 
 <script>
-  import { isAuthenticated, currentUser, logout } from '../../lib/pocketbase.ts'
+  import { isAuthenticated, currentUser, logout } from '../../lib/api.ts'
   import { getCartCount } from '../../lib/cart.ts'
 
   function updateAuthUI() {

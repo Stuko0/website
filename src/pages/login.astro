@@ -65,7 +65,7 @@ import { Icon } from "astro-icon/components"
   </div>
 
   <script>
-    import pb, { login, register, isAuthenticated, isAdmin } from '../lib/pocketbase.ts'
+    import { login, register, isAuthenticated, isAdmin } from '../lib/api.ts'
 
     if (isAuthenticated()) {
       window.location.href = isAdmin() ? '/admin' : '/'
@@ -97,9 +97,8 @@ import { Icon } from "astro-icon/components"
       const errorDiv = document.getElementById('login-error')
       
       try {
-        await login(email, password)
-        const role = pb.authStore.record?.role
-        window.location.href = role === 'admin' ? '/admin' : '/'
+        const user = await login(email, password)
+        window.location.href = user.role === 'admin' ? '/admin' : '/'
       } catch (err: any) {
         errorDiv.textContent = err.message || 'Error al iniciar sesión'
         errorDiv.classList.remove('hidden')
@@ -112,11 +111,10 @@ import { Icon } from "astro-icon/components"
       const name = (form.elements.namedItem('name') as HTMLInputElement).value
       const email = (form.elements.namedItem('email') as HTMLInputElement).value
       const password = (form.elements.namedItem('password') as HTMLInputElement).value
-      const passwordConfirm = (form.elements.namedItem('passwordConfirm') as HTMLInputElement).value
       const errorDiv = document.getElementById('register-error')
       
       try {
-        await register(email, password, passwordConfirm, name)
+        await register(email, password, name)
         window.location.href = '/'
       } catch (err: any) {
         errorDiv.textContent = err.message || 'Error al crear cuenta'

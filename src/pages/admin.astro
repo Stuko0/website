@@ -89,11 +89,11 @@ import { Icon } from "astro-icon/components"
               <p class="text-sm text-muted">Ver y gestionar cuentas de clientes</p>
             </div>
           </a>
-          <a href="http://localhost:8090/_/" target="_blank" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+          <a href="/admin/supabase" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors opacity-50 pointer-events-none">
             <Icon name="mdi:cog" class="text-2xl text-primary" />
             <div>
-              <p class="font-semibold text-heading">Panel PocketBase</p>
-              <p class="text-sm text-muted">Administrar backend directamente</p>
+              <p class="font-semibold text-heading">Panel Supabase</p>
+              <p class="text-sm text-muted">Próximamente</p>
             </div>
           </a>
         </div>
@@ -113,7 +113,7 @@ import { Icon } from "astro-icon/components"
   </div>
 
   <script>
-    import pb, { isAuthenticated, isAdmin } from '../lib/pocketbase.ts'
+    import { isAuthenticated, isAdmin, fetchWithAuth } from '../lib/api.ts'
 
     const adminContent = document.getElementById('admin-content')
     const noAccess = document.getElementById('no-access')
@@ -127,25 +127,24 @@ import { Icon } from "astro-icon/components"
 
     async function loadStats() {
       try {
-        const products = await pb.collection('products').getList(1, 1)
-        document.getElementById('stat-products').textContent = products.totalItems.toString()
+        const products = await fetchWithAuth('/api/products')
+        document.getElementById('stat-products').textContent = Array.isArray(products) ? products.length.toString() : '0'
       } catch (e) {}
 
       try {
-        const orders = await pb.collection('orders').getList(1, 5, { sort: '-created' })
-        document.getElementById('stat-orders').textContent = orders.totalItems.toString()
-        
+        const orders = await fetchWithAuth('/api/orders')
+        document.getElementById('stat-orders').textContent = Array.isArray(orders) ? orders.length.toString() : '0'
         const recentOrdersEl = document.getElementById('recent-orders')
-        if (orders.items.length === 0) {
+        if (!orders || orders.length === 0) {
           recentOrdersEl.innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
         } else {
-          recentOrdersEl.innerHTML = orders.items.map((order: any) => `
+          recentOrdersEl.innerHTML = orders.map((order: any) => `
             <div class="flex items-center justify-between p-3 border border-border rounded">
               <div>
-                <p class="font-semibold text-heading">Pedido #${order.id.slice(0, 8)}</p>
+                <p class="font-semibold text-heading">Pedido #${(order.id || '').slice(0, 8)}</p>
                 <p class="text-sm text-muted">${order.status || 'pending'}</p>
               </div>
-              <p class="font-bold text-primary">Bs ${order.total?.toFixed(2) || '0.00'}</p>
+              <p class="font-bold text-primary">Bs ${(order.total || 0).toFixed(2)}</p>
             </div>
           `).join('')
         }
@@ -154,8 +153,11 @@ import { Icon } from "astro-icon/components"
       }
 
       try {
-        const users = await pb.collection('users').getList(1, 1)
-        document.getElementById('stat-users').textContent = users.totalItems.toString()
+        const res = await fetch('/api/users/count')
+        if (res.ok) {
+          const data = await res.json()
+          document.getElementById('stat-users').textContent = data.count?.toString() || '0'
+        }
       } catch (e) {}
     }
   </script>
