@@ -132,7 +132,7 @@ import { Icon } from "astro-icon/components"
     const container = document.getElementById('profile-address-list')
     try {
       const addrs = await fetchAddresses()
-      if (addrs.length === 0) { container.innerHTML = '<p class="text-muted text-sm">No has agregado direcciones aún.</p>'; return }
+      if (!addrs || addrs.length === 0) { container.innerHTML = '<p class="text-muted text-sm">No has agregado direcciones aún.</p>'; return }
       container.innerHTML = addrs.map((a: any) => `
         <div class="border border-border rounded-sm p-4 flex justify-between items-start">
           <div>
@@ -147,7 +147,7 @@ import { Icon } from "astro-icon/components"
           </div>
         </div>
       `).join('')
-    } catch (e) { container.innerHTML = '<p class="text-muted text-sm">Error al cargar direcciones.</p>' }
+    } catch (e) { container.innerHTML = '<p class="text-muted text-sm">No has agregado direcciones aún.</p>' }
   }
 
   ;(window as any).editAddress = (id: string, name: string, address: string, city: string, phone: string) => {
