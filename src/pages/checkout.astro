@@ -17,8 +17,13 @@ import { Icon } from "astro-icon/components"
   </div>
 
   <div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Form -->
+    <div id="checkout-empty" class="hidden text-center py-20">
+      <Icon name="mdi:cart-outline" class="text-6xl text-border mx-auto mb-4" />
+      <h2 class="text-2xl font-bold text-heading mb-2">Tu carrito está vacío</h2>
+      <a href="/productos" class="inline-block bg-primary text-cream px-8 py-3 font-bold uppercase tracking-wider text-sm hover:bg-primary-light">Ver Productos</a>
+    </div>
+
+    <div id="checkout-form" class="flex flex-col lg:flex-row gap-8">
       <div class="flex-1 max-w-2xl">
         <!-- Envío -->
         <div class="mb-8">
@@ -29,122 +34,140 @@ import { Icon } from "astro-icon/components"
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Nombre completo</label>
-              <input type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="Juan Pérez" />
+              <input id="co-name" type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Email</label>
-              <input type="email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="correo@ejemplo.com" />
+              <input id="co-email" type="email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Teléfono</label>
-              <input type="tel" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="+591 70000000" />
+              <input id="co-phone" type="tel" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Dirección</label>
-              <input type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="Calle y número" />
+              <input id="co-address" type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div>
               <label class="block text-sm font-semibold text-muted mb-1">Ciudad</label>
-              <input type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="La Paz" />
+              <input id="co-city" type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div>
               <label class="block text-sm font-semibold text-muted mb-1">Código Postal</label>
-              <input type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" placeholder="0000" />
+              <input id="co-zip" type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
           </div>
-        </div>
-
-        <!-- Método de envío -->
-        <div class="mb-8">
-          <h2 class="text-lg font-bold text-heading mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-accent text-primary flex items-center justify-center text-sm font-bold">2</span>
-            Método de Envío
-          </h2>
-          <label class="flex items-center gap-3 p-4 border-2 border-accent rounded-sm cursor-pointer mb-2 transition-colors">
-            <input type="radio" name="envio" checked class="accent-primary" />
-            <div class="flex-1">
-              <p class="font-semibold text-primary">Envío Estándar</p>
-              <p class="text-xs text-muted">Entrega en 5-7 días hábiles</p>
-            </div>
-            <span class="font-semibold text-sm">Bs 15.00</span>
-          </label>
-          <label class="flex items-center gap-3 p-4 border border-border rounded-sm cursor-pointer hover:border-accent transition-colors">
-            <input type="radio" name="envio" class="accent-primary" />
-            <div class="flex-1">
-              <p class="font-semibold text-primary">Envío Express</p>
-              <p class="text-xs text-muted">Entrega en 1-2 días hábiles</p>
-            </div>
-            <span class="font-semibold text-sm">Bs 35.00</span>
-          </label>
         </div>
 
         <!-- Método de pago -->
         <div class="mb-8">
           <h2 class="text-lg font-bold text-heading mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-full bg-accent text-primary flex items-center justify-center text-sm font-bold">3</span>
+            <span class="w-8 h-8 rounded-full bg-accent text-primary flex items-center justify-center text-sm font-bold">2</span>
             Método de Pago
           </h2>
-          <label class="flex items-center gap-3 p-4 border-2 border-accent rounded-sm cursor-pointer mb-2 transition-colors">
-            <input type="radio" name="pago" checked class="accent-primary" />
+          <label class="flex items-center gap-3 p-4 border-2 border-accent rounded-sm cursor-pointer mb-2">
+            <input type="radio" name="pago" value="transferencia" checked class="accent-primary" />
             <Icon name="mdi:bank" class="text-2xl text-primary" />
             <div class="flex-1">
               <p class="font-semibold text-primary">Transferencia Bancaria</p>
               <p class="text-xs text-muted">Transferencia a cuenta bancaria</p>
             </div>
           </label>
-          <label class="flex items-center gap-3 p-4 border border-border rounded-sm cursor-pointer hover:border-accent transition-colors mb-2">
-            <input type="radio" name="pago" class="accent-primary" />
-            <Icon name="mdi:credit-card" class="text-2xl text-primary" />
+          <label class="flex items-center gap-3 p-4 border border-border rounded-sm cursor-pointer hover:border-accent mb-2">
+            <input type="radio" name="pago" value="contraentrega" class="accent-primary" />
+            <Icon name="mdi:cash" class="text-2xl text-primary" />
             <div class="flex-1">
-              <p class="font-semibold text-primary">Tarjeta de Crédito/Débito</p>
-              <p class="text-xs text-muted">Visa, Mastercard, American Express</p>
+              <p class="font-semibold text-primary">Pago contra entrega</p>
+              <p class="text-xs text-muted">Paga en efectivo al recibir tu pedido</p>
             </div>
           </label>
-          <label class="flex items-center gap-3 p-4 border border-border rounded-sm cursor-pointer hover:border-accent transition-colors">
-            <input type="radio" name="pago" class="accent-primary" />
-            <Icon name="mdi:qrcode" class="text-2xl text-primary" />
+          <label class="flex items-center gap-3 p-4 border border-border rounded-sm cursor-pointer hover:border-accent">
+            <input type="radio" name="pago" value="mercadopago" class="accent-primary" disabled />
+            <Icon name="mdi:credit-card" class="text-2xl text-primary" />
             <div class="flex-1">
-              <p class="font-semibold text-primary">QR Payment</p>
-              <p class="text-xs text-muted">Paga con tu aplicación móvil</p>
+              <p class="font-semibold text-primary">Mercado Pago</p>
+              <p class="text-xs text-muted">Tarjeta de crédito/débito — Próximamente</p>
             </div>
           </label>
         </div>
 
-        <button class="w-full bg-primary text-cream py-4 font-bold text-base uppercase tracking-wider hover:bg-primary-light transition-colors rounded-sm">
-          Confirmar Pedido
+        <button id="co-submit-btn" class="w-full bg-primary text-cream py-4 font-bold text-base uppercase tracking-wider hover:bg-primary-light rounded-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          Procesando...
         </button>
+        <p id="co-error" class="mt-2 text-sm text-red-600 hidden"></p>
       </div>
 
-      <!-- Resumen -->
+      <!-- Resumen dinámico -->
       <aside class="w-full lg:w-80 shrink-0">
         <div class="bg-cream border border-border rounded-sm p-6 sticky top-28">
           <h3 class="text-xl font-bold text-heading mb-4 pb-3 border-b border-border">Tu Pedido</h3>
-          <div class="space-y-3 pb-4 border-b border-border">
-            <div class="flex justify-between text-sm">
-              <span>Chocolate Amargo 70% × 2</span>
-              <span>Bs 70.00</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span>Bombones Rellenos × 1</span>
-              <span>Bs 65.00</span>
-            </div>
-          </div>
+          <div id="co-items" class="space-y-3 pb-4 border-b border-border"></div>
           <div class="space-y-3 pt-4 text-sm text-muted">
-            <div class="flex justify-between">
-              <span>Subtotal</span>
-              <span class="font-semibold text-body">Bs 135.00</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Envío</span>
-              <span class="font-semibold text-body">Bs 15.00</span>
-            </div>
+            <div class="flex justify-between"><span>Subtotal</span><span class="font-semibold text-body" id="co-subtotal">Bs 0.00</span></div>
+            <div class="flex justify-between"><span>Envío</span><span class="font-semibold text-body">Bs 15.00</span></div>
             <div class="border-t border-border pt-3 flex justify-between font-bold text-lg text-body">
               <span>Total</span>
-              <span>Bs 150.00</span>
+              <span id="co-total">Bs 0.00</span>
             </div>
           </div>
         </div>
       </aside>
     </div>
   </div>
+
+  <script>
+    import { getCart, getCartTotal, clearCart } from '../lib/cart.ts'
+    import { submitOrder, isAuthenticated } from '../lib/api.ts'
+
+    function renderSummary() {
+      const items = getCart()
+      if (items.length === 0) {
+        document.getElementById('checkout-form').classList.add('hidden')
+        document.getElementById('checkout-empty').classList.remove('hidden')
+        return
+      }
+      document.getElementById('checkout-form').classList.remove('hidden')
+      document.getElementById('checkout-empty').classList.add('hidden')
+
+      const container = document.getElementById('co-items')
+      container.innerHTML = items.map(i => `
+        <div class="flex justify-between text-sm">
+          <span>${i.name} × ${i.quantity}</span>
+          <span>Bs ${(i.price * i.quantity).toFixed(2)}</span>
+        </div>
+      `).join('')
+
+      const subtotal = getCartTotal()
+      const envio = 15
+      document.getElementById('co-subtotal').textContent = `Bs ${subtotal.toFixed(2)}`
+      document.getElementById('co-total').textContent = `Bs ${(subtotal + envio).toFixed(2)}`
+      document.getElementById('co-submit-btn').textContent = isAuthenticated() ? 'Confirmar Pedido' : 'Iniciar Sesión para Comprar'
+      document.getElementById('co-submit-btn').disabled = !isAuthenticated()
+    }
+
+    document.getElementById('co-submit-btn')?.addEventListener('click', async () => {
+      if (!isAuthenticated()) { window.location.href = '/login'; return }
+
+      const btn = document.getElementById('co-submit-btn') as HTMLButtonElement
+      const errEl = document.getElementById('co-error')
+      btn.disabled = true
+      btn.textContent = 'Creando pedido...'
+      errEl.classList.add('hidden')
+
+      const items = getCart().map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity }))
+
+      try {
+        const order = await submitOrder(items)
+        clearCart()
+        window.location.href = `/pedido/confirmado?id=${order.id}`
+      } catch (e: any) {
+        errEl.textContent = '❌ Error al crear pedido: ' + (e.message || 'desconocido')
+        errEl.classList.remove('hidden')
+        btn.disabled = false
+        btn.textContent = 'Intentar de nuevo'
+      }
+    })
+
+    renderSummary()
+  </script>
 </PublicLayout>
