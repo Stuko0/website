@@ -1,5 +1,6 @@
 ---
 import PublicLayout from "../../layouts/PublicLayout.astro"
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro"
 import { Icon } from "astro-icon/components"
 
 export async function getStaticPaths() {
@@ -74,53 +75,57 @@ const { recipe } = Astro.props
 ---
 
 <PublicLayout title={recipe.title}>
-  <!-- Breadcrumbs -->
-  <div class="bg-primary pt-24 pb-4">
+  <div class="bg-primary pt-24 pb-6">
     <div class="container mx-auto px-4">
-      <nav class="text-sm text-cream/70 mb-2">
-        <a href="/" class="hover:text-accent">Inicio</a>
-        <span class="mx-2">/</span>
-        <a href="/recetas" class="hover:text-accent">Recetas</a>
-        <span class="mx-2">/</span>
-        <span class="text-cream">{recipe.title}</span>
-      </nav>
+      <Breadcrumbs crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Recetas", href: "/recetas" },
+        { label: recipe.title }
+      ]} />
     </div>
   </div>
 
   <div class="container mx-auto px-4 py-8">
-    <!-- Hero de la receta -->
+    <!-- Hero -->
     <div class="flex flex-col lg:flex-row gap-8 mb-12">
       <div class="w-full lg:w-1/2">
-        <img src={recipe.image} alt={recipe.title} class="w-full h-[350px] lg:h-[450px] object-cover rounded-lg shadow-lg" />
+        <div class="rounded-sm overflow-hidden shadow-md">
+          <img src={recipe.image} alt={recipe.title} class="w-full h-[350px] lg:h-[450px] object-cover" />
+        </div>
       </div>
       <div class="w-full lg:w-1/2 flex flex-col justify-center">
         <h1 class="font-heading text-4xl lg:text-5xl text-primary mb-4">{recipe.title}</h1>
         <p class="text-muted text-lg leading-relaxed mb-6">{recipe.description}</p>
-        <div class="flex flex-wrap gap-4 text-sm">
-          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
-            <Icon name="mdi:clock-outline" /> {recipe.time}
+        <div class="flex flex-wrap gap-3 text-sm">
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-sm text-primary font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {recipe.time}
           </span>
-          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
-            <Icon name="mdi:chef-hat" /> {recipe.difficulty}
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-sm text-primary font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            {recipe.difficulty}
           </span>
-          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-primary font-semibold">
-            <Icon name="mdi:silverware-variant" /> {recipe.servings} porciones
+          <span class="flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-sm text-primary font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            {recipe.servings} porciones
           </span>
         </div>
       </div>
     </div>
 
+    <!-- Content: Ingredients + Instructions -->
     <div class="flex flex-col lg:flex-row gap-10">
-      <!-- Ingredientes -->
+      <!-- Ingredients sidebar -->
       <aside class="w-full lg:w-80 shrink-0">
-        <div class="bg-cream border-2 border-border rounded-lg p-6 sticky top-28">
-          <h2 class="text-xl font-semibold text-heading mb-4 flex items-center gap-2">
-            <Icon name="mdi:cart-outline" class="text-accent" /> Ingredientes
+        <div class="bg-cream border border-border rounded-sm p-6 sticky top-28">
+          <h2 class="text-xl font-bold text-heading mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Ingredientes
           </h2>
           <ul class="space-y-2">
             {recipe.ingredients.map(ing => (
-              <li class="flex items-start gap-2 text-muted">
-                <Icon name="mdi:check-circle-outline" class="text-accent mt-0.5 shrink-0" />
+              <li class="flex items-start gap-2 text-muted text-sm">
+                <svg class="w-4 h-4 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span>{ing}</span>
               </li>
             ))}
@@ -128,9 +133,9 @@ const { recipe } = Astro.props
         </div>
       </aside>
 
-      <!-- Instrucciones -->
+      <!-- Instructions -->
       <main class="flex-1">
-        <h2 class="text-2xl font-semibold text-heading mb-6">Instrucciones</h2>
+        <h2 class="text-2xl font-bold text-heading mb-6">Instrucciones</h2>
         <ol class="space-y-6">
           {recipe.instructions.map((step, i) => (
             <li class="flex gap-4">
@@ -142,17 +147,17 @@ const { recipe } = Astro.props
       </main>
     </div>
 
-    <!-- Productos relacionados para la receta -->
+    <!-- Related products -->
     {recipe.relatedProducts.length > 0 && (
       <div class="mt-16 border-t border-border pt-8">
         <h2 class="font-heading text-3xl text-heading mb-6">Productos que necesitarás</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {recipe.relatedProducts.map(p => (
-            <a href={`/productos/${p.slug}`} class="group flex items-center gap-4 border-2 border-border rounded-lg p-4 hover:border-accent transition-colors">
-              <img src={p.image} alt={p.name} class="w-20 h-20 object-cover rounded" />
+            <a href={`/productos/${p.slug}`} class="group flex items-center gap-4 border border-border rounded-sm p-4 hover:border-accent transition-colors">
+              <img src={p.image} alt={p.name} class="w-20 h-20 object-cover rounded-sm shrink-0" />
               <div>
                 <h4 class="font-semibold text-primary group-hover:text-accent transition-colors">{p.name}</h4>
-                <p class="text-muted">Bs {p.price.toFixed(2)}</p>
+                <p class="text-sm text-muted">Bs {p.price.toFixed(2)}</p>
               </div>
             </a>
           ))}

@@ -1,0 +1,24 @@
+---
+export interface Props {
+  id?: string
+  quantity?: number
+  min?: number
+  max?: number
+}
+const { id = 'qty-input', quantity = 1, min = 1, max = 99 } = Astro.props
+---
+<div class="flex items-center border-2 border-border rounded w-fit">
+  <button onclick={`window.updateQty_${id}(${quantity - 1})`}
+    class="px-3 py-1.5 text-lg hover:bg-accent/20 transition-colors disabled:opacity-50"
+    disabled={quantity <= min}>
+    -
+  </button>
+  <span class="px-4 py-1.5 border-x-2 border-border font-semibold min-w-[3rem] text-center" data-qty={id}>
+    {quantity}
+  </span>
+  <button onclick={`window.updateQty_${id}(${quantity + 1})`}
+    class="px-3 py-1.5 text-lg hover:bg-accent/20 transition-colors disabled:opacity-50"
+    disabled={quantity >= max}>
+    +
+  </button>
+</div>

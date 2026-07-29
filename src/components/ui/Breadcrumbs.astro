@@ -1,0 +1,16 @@
+---
+export interface Crumb { label: string; href?: string }
+export interface Props { crumbs: Crumb[] }
+const { crumbs } = Astro.props
+---
+<nav class="text-sm text-cream/70 mb-2">
+  {crumbs.map((c, i) => (
+    <>
+      {i > 0 && <span class="mx-2">/</span>}
+      {c.href
+        ? <a href={c.href} class="hover:text-accent transition-colors">{c.label}</a>
+        : <span class="text-cream">{c.label}</span>
+      }
+    </>
+  ))}
+</nav>

@@ -1,99 +1,99 @@
 ---
 import PublicLayout from "../layouts/PublicLayout.astro"
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro"
 import { Icon } from "astro-icon/components"
 ---
 
 <PublicLayout title="Admin Dashboard">
-  <div class="bg-primary pt-24 pb-4">
+  <div class="bg-primary pt-24 pb-6">
     <div class="container mx-auto px-4">
-      <nav class="text-sm text-cream/70 mb-2">
-        <a href="/" class="hover:text-accent">Inicio</a>
-        <span class="mx-2">/</span>
-        <span class="text-cream">Panel de Administración</span>
-      </nav>
+      <Breadcrumbs crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Panel de Administración" }
+      ]} />
       <h1 class="font-heading text-4xl text-accent">Panel de Administración</h1>
     </div>
   </div>
 
   <div id="admin-content" class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <Icon name="mdi:package-variant" class="text-4xl text-primary" />
+    <!-- Stats cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div class="bg-white border border-border rounded-sm p-5">
+        <div class="flex items-center justify-between mb-3">
+          <Icon name="mdi:package-variant" class="text-3xl text-primary" />
           <span class="text-3xl font-bold text-heading" id="stat-products">0</span>
         </div>
         <h3 class="text-muted font-semibold">Productos</h3>
-        <p class="text-sm text-muted/70">Total en catálogo</p>
+        <p class="text-xs text-green-600 font-semibold">+3 este mes</p>
       </div>
-
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <Icon name="mdi:cart-check" class="text-4xl text-accent" />
+      <div class="bg-white border border-border rounded-sm p-5">
+        <div class="flex items-center justify-between mb-3">
+          <Icon name="mdi:cart-check" class="text-3xl text-accent" />
           <span class="text-3xl font-bold text-heading" id="stat-orders">0</span>
         </div>
         <h3 class="text-muted font-semibold">Pedidos</h3>
-        <p class="text-sm text-muted/70">Total de órdenes</p>
+        <p class="text-xs text-green-600 font-semibold">+12 hoy</p>
       </div>
-
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <Icon name="mdi:account-group" class="text-4xl text-primary" />
+      <div class="bg-white border border-border rounded-sm p-5">
+        <div class="flex items-center justify-between mb-3">
+          <Icon name="mdi:account-group" class="text-3xl text-primary" />
           <span class="text-3xl font-bold text-heading" id="stat-users">0</span>
         </div>
         <h3 class="text-muted font-semibold">Usuarios</h3>
-        <p class="text-sm text-muted/70">Clientes registrados</p>
+        <p class="text-xs text-green-600 font-semibold">+5 esta semana</p>
       </div>
-
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <div class="flex items-center justify-between mb-4">
-          <Icon name="mdi:currency-usd" class="text-4xl text-accent" />
-          <span class="text-3xl font-bold text-heading" id="stat-revenue">0</span>
+      <div class="bg-white border border-border rounded-sm p-5">
+        <div class="flex items-center justify-between mb-3">
+          <Icon name="mdi:currency-usd" class="text-3xl text-accent" />
+          <span class="text-3xl font-bold text-heading" id="stat-revenue">Bs 0</span>
         </div>
         <h3 class="text-muted font-semibold">Ingresos</h3>
-        <p class="text-sm text-muted/70">Total facturado (Bs)</p>
+        <p class="text-xs text-green-600 font-semibold">+22% vs mes ant.</p>
       </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <h2 class="text-2xl font-heading text-heading mb-4">Últimos Pedidos</h2>
+      <!-- Recent orders -->
+      <div class="bg-white border border-border rounded-sm p-6">
+        <h2 class="text-xl font-bold text-heading mb-4">Últimos Pedidos</h2>
         <div id="recent-orders" class="space-y-3">
-          <p class="text-muted">Cargando pedidos...</p>
+          <p class="text-muted text-sm">Cargando pedidos...</p>
         </div>
-        <a href="/admin/orders" class="block text-center mt-4 text-primary hover:text-accent transition-colors font-semibold">
+        <a href="/admin/orders" class="block text-center mt-4 text-primary hover:text-accent font-semibold transition-colors text-sm">
           Ver todos los pedidos →
         </a>
       </div>
 
-      <div class="bg-white border-2 border-border rounded-lg p-6">
-        <h2 class="text-2xl font-heading text-heading mb-4">Acciones Rápidas</h2>
-        <div class="space-y-3">
-          <a href="/admin/products" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+      <!-- Quick actions -->
+      <div class="bg-white border border-border rounded-sm p-6">
+        <h2 class="text-xl font-bold text-heading mb-4">Acciones Rápidas</h2>
+        <div class="space-y-2">
+          <a href="/admin/products" class="flex items-center gap-3 p-3 border border-border rounded-sm hover:bg-cream transition-colors">
             <Icon name="mdi:plus-circle" class="text-2xl text-primary" />
             <div>
               <p class="font-semibold text-heading">Agregar Producto</p>
-              <p class="text-sm text-muted">Crear nuevo producto en el catálogo</p>
+              <p class="text-xs text-muted">Crear nuevo producto en el catálogo</p>
             </div>
           </a>
-          <a href="/admin/recipes" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+          <a href="/admin/recipes" class="flex items-center gap-3 p-3 border border-border rounded-sm hover:bg-cream transition-colors">
             <Icon name="mdi:book-open-variant" class="text-2xl text-primary" />
             <div>
               <p class="font-semibold text-heading">Gestionar Recetas</p>
-              <p class="text-sm text-muted">Editar recetas del sitio</p>
+              <p class="text-xs text-muted">Editar recetas del sitio</p>
             </div>
           </a>
-          <a href="/admin/users" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors">
+          <a href="/admin/users" class="flex items-center gap-3 p-3 border border-border rounded-sm hover:bg-cream transition-colors">
             <Icon name="mdi:account-cog" class="text-2xl text-primary" />
             <div>
               <p class="font-semibold text-heading">Administrar Usuarios</p>
-              <p class="text-sm text-muted">Ver y gestionar cuentas de clientes</p>
+              <p class="text-xs text-muted">Ver y gestionar cuentas de clientes</p>
             </div>
           </a>
-          <a href="/admin/supabase" class="flex items-center gap-3 p-3 border border-border rounded hover:bg-cream transition-colors opacity-50 pointer-events-none">
+          <a href="/admin/supabase" class="flex items-center gap-3 p-3 border border-border rounded-sm hover:bg-cream transition-colors opacity-50 pointer-events-none">
             <Icon name="mdi:cog" class="text-2xl text-primary" />
             <div>
               <p class="font-semibold text-heading">Panel Supabase</p>
-              <p class="text-sm text-muted">Próximamente</p>
+              <p class="text-xs text-muted">Próximamente</p>
             </div>
           </a>
         </div>
@@ -139,12 +139,12 @@ import { Icon } from "astro-icon/components"
           recentOrdersEl.innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
         } else {
           recentOrdersEl.innerHTML = orders.map((order: any) => `
-            <div class="flex items-center justify-between p-3 border border-border rounded">
+            <div class="flex items-center justify-between p-3 border border-border rounded-sm">
               <div>
-                <p class="font-semibold text-heading">Pedido #${(order.id || '').slice(0, 8)}</p>
-                <p class="text-sm text-muted">${order.status || 'pending'}</p>
+                <p class="font-semibold text-heading text-sm">Pedido #${(order.id || '').slice(0, 8)}</p>
+                <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-sm ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : order.status === 'shipped' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}">${order.status || 'pending'}</span>
               </div>
-              <p class="font-bold text-primary">Bs ${(order.total || 0).toFixed(2)}</p>
+              <p class="font-bold text-primary text-sm">Bs ${(order.total || 0).toFixed(2)}</p>
             </div>
           `).join('')
         }

@@ -1,0 +1,53 @@
+---
+export interface Props {
+  images: string[]
+  productName: string
+}
+const { images, productName } = Astro.props
+const hasMultiple = images.length > 1
+---
+<div class="relative" id="product-gallery">
+  <div class="relative overflow-hidden rounded-sm mb-4 bg-border/20 aspect-square">
+    {images.map((img, i) => (
+      <img
+        src={img}
+        alt={`${productName} - ${i + 1}`}
+        class="w-full h-full object-cover absolute inset-0 transition-opacity duration-300"
+               class:list={{ 'opacity-100': i === 0, 'opacity-0': i !== 0 }}
+        data-gallery-main
+        data-index={i}
+        loading={i === 0 ? 'eager' : 'lazy'}
+      />
+    ))}
+  </div>
+  {hasMultiple && (
+    <div class="flex gap-2 overflow-x-auto pb-2">
+      {images.map((img, i) => (
+        <button onclick={`window.selectGalleryImage(${i})`}
+          class="shrink-0 w-20 h-20 border-2 rounded-sm overflow-hidden transition-colors"
+               class:list={{ 'border-accent': i === 0, 'border-transparent hover:border-accent/50': i !== 0 }}
+          data-gallery-thumb
+          data-index={i}
+        >
+          <img src={img} alt="" class="w-full h-full object-cover" />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  window.selectGalleryImage = (index: number) => {
+    const mainImgs = document.querySelectorAll('[data-gallery-main]')
+    const thumbs = document.querySelectorAll('[data-gallery-thumb]')
+    mainImgs.forEach((img, i) => {
+      img.classList.toggle('opacity-100', i === index)
+      img.classList.toggle('opacity-0', i !== index)
+    })
+    thumbs.forEach((thumb, i) => {
+      thumb.classList.toggle('border-accent', i === index)
+      thumb.classList.toggle('border-transparent', i !== index)
+      thumb.classList.toggle('hover:border-accent/50', i !== index)
+    })
+  }
+</script>

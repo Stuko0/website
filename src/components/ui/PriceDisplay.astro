@@ -1,0 +1,15 @@
+---
+export interface Props {
+  price: number
+  compareAtPrice?: number | null
+  currency?: 'Bs' | '$'
+}
+const { price, compareAtPrice, currency = 'Bs' } = Astro.props
+const hasDiscount = compareAtPrice !== undefined && compareAtPrice !== null && compareAtPrice > price
+---
+<div class="flex items-center gap-2">
+  <span class="text-lg font-bold text-body">{currency} {price.toFixed(2)}</span>
+  {hasDiscount && (
+    <span class="text-sm text-muted line-through">{currency} {compareAtPrice!.toFixed(2)}</span>
+  )}
+</div>

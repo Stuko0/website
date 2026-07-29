@@ -1,6 +1,7 @@
 ---
 import PublicLayout from "../layouts/PublicLayout.astro"
 import ProductCard from "../components/ui/ProductCard.astro"
+import Breadcrumbs from "../components/ui/Breadcrumbs.astro"
 import { getCollection } from "astro:content"
 
 const allProducts = await getCollection("products")
@@ -9,18 +10,28 @@ const products = allProducts.filter(p => p.data.visible).map(p => ({
   name: p.data.name,
   slug: p.data.slug,
   price: p.data.price,
+  compareAtPrice: p.data.compareAtPrice || undefined,
   unit: "unidad",
   category: p.data.category,
-  imageUrl: p.data.image || "",
-  imageHover: p.data.image || "",
+  image: p.data.image || "",
+  onSale: !!p.data.compareAtPrice,
 }))
 
-const categories = ["Todos", "Chocolate", "Cacao en polvo", "Manteca de cacao", "Nibs", "Bombones"]
+const allCategories = [...new Set(products.map(p => p.category).filter(Boolean))]
+const categories = ["Todos", ...allCategories]
+
+// Best sellers mini-list (sidebar)
+const bestSellers = products.slice(0, 5)
 ---
 
 <PublicLayout title="Productos">
-  <div class="pt-24 pb-8 bg-primary">
+  <!-- Header -->
+  <div class="bg-primary pt-24 pb-8">
     <div class="container mx-auto px-4">
+      <Breadcrumbs crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Productos" }
+      ]} />
       <h1 class="font-heading text-5xl text-accent mb-2">Nuestros Productos</h1>
       <p class="text-cream/80 text-lg">Cacao de la más alta calidad, directamente del productor a tu mesa.</p>
     </div>
@@ -28,41 +39,223 @@ const categories = ["Todos", "Chocolate", "Cacao en polvo", "Manteca de cacao", 
 
   <div class="container mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Sidebar: categorías -->
-      <aside class="w-full lg:w-64 shrink-0">
-        <h3 class="text-xl font-semibold text-heading mb-4">Categorías</h3>
-        <ul class="space-y-2">
-          {categories.map(cat => (
-            <li>
-              <a
-                href={cat === "Todos" ? "/productos" : `/productos?categoria=${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                class="block px-4 py-2 rounded text-muted hover:bg-accent/20 hover:text-primary transition-colors"
-              >
-                {cat}
+      <!-- ── SIDEBAR ── -->
+      <aside class="w-full lg:w-72 shrink-0" id="sidebar">
+        <!-- Categories -->
+        <div class="mb-8">
+          <h3 class="text-lg font-bold text-heading mb-4 pb-2 border-b border-border flex items-center justify-between cursor-pointer" onclick="toggleSidebarSection('cat-section')">
+            Categorías
+            <svg class="w-4 h-4 transition-transform" id="cat-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </h3>
+          <ul id="cat-section" class="space-y-1">
+            {categories.map(cat => (
+              <li>
+                <label class="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent/10 transition-colors text-muted hover:text-primary">
+                  <input type="checkbox" class="accent-primary rounded" data-filter="category" value={cat === "Todos" ? "" : cat}
+                    onchange="applyFilters()"
+                    checked={cat === "Todos"} />
+                  <span class="text-sm">{cat}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Best Sellers mini-list -->
+        <div class="mb-8">
+          <h3 class="text-lg font-bold text-heading mb-4 pb-2 border-b border-border">Más Vendidos</h3>
+          <div class="space-y-3">
+            {bestSellers.map(bs => (
+              <a href={`/productos/${bs.slug}`} class="flex items-center gap-3 group">
+                <img src={bs.image} alt={bs.name} class="w-14 h-14 object-cover rounded-sm shrink-0" loading="lazy" />
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-primary group-hover:text-accent transition-colors truncate">{bs.name}</p>
+                  <p class="text-xs text-muted">Bs {bs.price.toFixed(2)}</p>
+                </div>
               </a>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="mb-8">
+          <h3 class="text-lg font-bold text-heading mb-4 pb-2 border-b border-border">Precio</h3>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="flex-1">
+              <label class="text-xs text-muted mb-1 block">Desde</label>
+              <input type="number" id="price-from" min="0" class="w-full px-3 py-1.5 border border-border rounded text-sm focus:border-accent focus:outline-none" placeholder="0" />
+            </div>
+            <span class="text-muted mt-5">—</span>
+            <div class="flex-1">
+              <label class="text-xs text-muted mb-1 block">Hasta</label>
+              <input type="number" id="price-to" min="0" class="w-full px-3 py-1.5 border border-border rounded text-sm focus:border-accent focus:outline-none" placeholder="999" />
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="applyFilters()" class="flex-1 bg-primary text-cream text-sm py-1.5 font-semibold hover:bg-primary-light transition-colors">Aplicar</button>
+            <button onclick="clearFilters()" class="px-3 py-1.5 text-sm text-muted hover:text-primary transition-colors">Limpiar</button>
+          </div>
+        </div>
+
+        <!-- Clear All -->
+        <button onclick="clearFilters()" id="clear-all" class="hidden w-full text-center text-sm text-primary hover:text-accent font-semibold transition-colors py-2 border border-dashed border-border rounded">
+          Limpiar todos los filtros
+        </button>
       </aside>
 
-      <!-- Grid de productos -->
-      <main class="flex-1">
-        <div class="flex justify-between items-center mb-6">
-          <p class="text-muted">{products.length} producto(s)</p>
+      <!-- ── MAIN CONTENT ── -->
+      <main class="flex-1 min-w-0">
+        <!-- Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
+          <div class="flex items-center gap-4">
+            <!-- Grid/List toggle -->
+            <div class="flex border-2 border-border rounded overflow-hidden">
+              <button id="view-grid" onclick="setView('grid')" class="p-2 bg-accent text-primary transition-colors" title="Cuadrícula">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H4zm0 8a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H4zm6-6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zm0 8a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" clip-rule="evenodd"/></svg>
+              </button>
+              <button id="view-list" onclick="setView('list')" class="p-2 text-muted hover:bg-accent/20 transition-colors" title="Lista">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+              </button>
+            </div>
+            <span class="text-sm text-muted" id="result-count">{products.length} producto(s)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-muted">Ordenar por</label>
+            <select id="sort-select" onchange="applyFilters()" class="border-2 border-border rounded px-3 py-1.5 text-sm focus:border-accent focus:outline-none bg-white">
+              <option value="featured">Destacados</option>
+              <option value="name-asc">A-Z</option>
+              <option value="name-desc">Z-A</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+            </select>
+          </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {products.map(p => (
-            <ProductCard product={p} />
+            <div class="product-item" data-category={p.category || ''} data-price={p.price} data-name={p.name}>
+              <ProductCard product={p} />
+            </div>
           ))}
         </div>
 
-        <!-- Paginación placeholder -->
-        <div class="flex justify-center mt-12 gap-2">
-          <span class="w-10 h-10 flex items-center justify-center rounded bg-accent text-primary font-semibold">1</span>
-          <span class="w-10 h-10 flex items-center justify-center rounded bg-border/50 text-muted hover:bg-accent/30 cursor-pointer">2</span>
-          <span class="w-10 h-10 flex items-center justify-center rounded bg-border/50 text-muted hover:bg-accent/30 cursor-pointer">3</span>
+        <!-- List View -->
+        <div id="product-list" class="hidden space-y-4">
+          {products.map(p => (
+            <div class="product-item flex items-center gap-4 border border-border rounded p-4 hover:shadow-sm transition-shadow" data-category={p.category || ''} data-price={p.price} data-name={p.name}>
+              <a href={`/productos/${p.slug}`} class="shrink-0 w-24 h-24 overflow-hidden rounded-sm">
+                <img src={p.image} alt={p.name} class="w-full h-full object-cover" loading="lazy" />
+              </a>
+              <div class="flex-1 min-w-0">
+                {p.category && <p class="text-xs uppercase tracking-wider text-muted/60">{p.category}</p>}
+                <a href={`/productos/${p.slug}`} class="font-semibold text-primary hover:text-accent transition-colors">{p.name}</a>
+                <p class="text-sm font-bold text-body mt-1">Bs {p.price.toFixed(2)}</p>
+              </div>
+              <button onclick={`window.addToCart('${p.id}')`} class="shrink-0 bg-primary text-cream px-4 py-2 text-sm font-semibold hover:bg-primary-light transition-colors rounded-sm">
+                Agregar
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-12 gap-1">
+          <button class="w-10 h-10 flex items-center justify-center rounded bg-accent text-primary font-bold" data-page="1">1</button>
+          <button class="w-10 h-10 flex items-center justify-center rounded bg-border/50 text-muted hover:bg-accent/30 transition-colors" data-page="2">2</button>
+          <button class="w-10 h-10 flex items-center justify-center rounded bg-border/50 text-muted hover:bg-accent/30 transition-colors" data-page="3">3</button>
         </div>
       </main>
     </div>
   </div>
+
+  <script>
+    // ── View Toggle ──
+    function setView(view: 'grid' | 'list') {
+      const grid = document.getElementById('product-grid')
+      const list = document.getElementById('product-list')
+      const gridBtn = document.getElementById('view-grid')
+      const listBtn = document.getElementById('view-list')
+      if (view === 'grid') {
+        grid.classList.remove('hidden')
+        list.classList.add('hidden')
+        gridBtn.className = 'p-2 bg-accent text-primary transition-colors'
+        listBtn.className = 'p-2 text-muted hover:bg-accent/20 transition-colors'
+      } else {
+        grid.classList.add('hidden')
+        list.classList.remove('hidden')
+        listBtn.className = 'p-2 bg-accent text-primary transition-colors'
+        gridBtn.className = 'p-2 text-muted hover:bg-accent/20 transition-colors'
+      }
+    }
+    window.setView = setView
+
+    // ── Filters ──
+    function applyFilters() {
+      const checkedCats = [...document.querySelectorAll('[data-filter="category"]:checked')].map(cb => cb.value)
+      const priceFrom = parseFloat((document.getElementById('price-from') as HTMLInputElement).value) || 0
+      const priceTo = parseFloat((document.getElementById('price-to') as HTMLInputElement).value) || Infinity
+      const sort = (document.getElementById('sort-select') as HTMLSelectElement).value
+
+      const items = document.querySelectorAll('.product-item')
+      let visibleCount = 0
+
+      items.forEach(item => {
+        const cat = item.getAttribute('data-category') || ''
+        const price = parseFloat(item.getAttribute('data-price')) || 0
+        const catMatch = checkedCats.length === 0 || checkedCats.includes('') || checkedCats.includes(cat)
+        const priceMatch = price >= priceFrom && price <= priceTo
+        const match = catMatch && priceMatch
+        item.classList.toggle('hidden', !match)
+        if (match) visibleCount++
+      })
+
+      // Sort
+      const productContainer = document.getElementById('product-grid')
+      const listContainer = document.getElementById('product-list')
+      const sortedGrid = [...productContainer.querySelectorAll('.product-item')].sort(sortFn(sort))
+      const sortedList = [...listContainer.querySelectorAll('.product-item')].sort(sortFn(sort))
+      sortedGrid.forEach(el => productContainer.appendChild(el))
+      sortedList.forEach(el => listContainer.appendChild(el))
+
+      document.getElementById('result-count').textContent = `${visibleCount} producto(s)`
+      document.getElementById('clear-all').classList.toggle('hidden', checkedCats.length === 0 && priceFrom === 0 && priceTo === Infinity)
+    }
+    window.applyFilters = applyFilters
+
+    function sortFn(sort: string) {
+      return (a: HTMLElement, b: HTMLElement) => {
+        const nameA = a.getAttribute('data-name') || ''
+        const nameB = b.getAttribute('data-name') || ''
+        const priceA = parseFloat(a.getAttribute('data-price')) || 0
+        const priceB = parseFloat(b.getAttribute('data-price')) || 0
+        switch(sort) {
+          case 'name-asc': return nameA.localeCompare(nameB)
+          case 'name-desc': return nameB.localeCompare(nameA)
+          case 'price-asc': return priceA - priceB
+          case 'price-desc': return priceB - priceA
+          default: return 0
+        }
+      }
+    }
+
+    function clearFilters() {
+      document.querySelectorAll('[data-filter="category"]').forEach(cb => {
+        (cb as HTMLInputElement).checked = cb.getAttribute('value') === ''
+      })
+      (document.getElementById('price-from') as HTMLInputElement).value = ''
+      (document.getElementById('price-to') as HTMLInputElement).value = ''
+      document.getElementById('clear-all').classList.add('hidden')
+      applyFilters()
+    }
+    window.clearFilters = clearFilters
+
+    function toggleSidebarSection(id: string) {
+      const el = document.getElementById(id)
+      const chevron = document.getElementById(id.replace('section', 'chevron'))
+      if (el) el.classList.toggle('hidden')
+      if (chevron) chevron.classList.toggle('rotate-180')
+    }
+    window.toggleSidebarSection = toggleSidebarSection
+  </script>
 </PublicLayout>
