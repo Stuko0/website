@@ -113,7 +113,7 @@ import { Icon } from "astro-icon/components"
   </div>
 
   <script>
-    import { isAuthenticated, isAdmin, fetchWithAuth } from '../lib/api.ts'
+    import { isAuthenticated, isAdmin, fetchAdminStats, fetchAdminOrders, fetchAdminProducts, fetchWithAuth } from '../lib/api.ts'
 
     const adminContent = document.getElementById('admin-content')
     const noAccess = document.getElementById('no-access')
@@ -127,37 +127,37 @@ import { Icon } from "astro-icon/components"
 
     async function loadStats() {
       try {
-        const products = await fetchWithAuth('/api/products')
-        document.getElementById('stat-products').textContent = Array.isArray(products) ? products.length.toString() : '0'
+        const stats = await fetchAdminStats()
+        document.getElementById('stat-products').textContent = (stats.products || 0).toString()
+        document.getElementById('stat-orders').textContent = (stats.orders || 0).toString()
+        document.getElementById('stat-users').textContent = (stats.profiles || 0).toString()
+        document.getElementById('stat-revenue').textContent = `Bs ${(stats.revenue || 0).toFixed(2)}`
       } catch (e) {}
 
       try {
-        const orders = await fetchWithAuth('/api/orders')
-        document.getElementById('stat-orders').textContent = Array.isArray(orders) ? orders.length.toString() : '0'
+        const orders = await fetchAdminOrders()
         const recentOrdersEl = document.getElementById('recent-orders')
         if (!orders || orders.length === 0) {
           recentOrdersEl.innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
         } else {
-          recentOrdersEl.innerHTML = orders.map((order: any) => `
-            <div class="flex items-center justify-between p-3 border border-border rounded-sm">
+          recentOrdersEl.innerHTML = orders.slice(0, 5).map((order: any) => {
+            const colors: Record<string,string> = { pending:'bg-yellow-100 text-yellow-700', paid:'bg-blue-100 text-blue-700', delivered:'bg-green-100 text-green-700', cancelled:'bg-red-100 text-red-600', processing:'bg-purple-100 text-purple-700', shipped:'bg-indigo-100 text-indigo-700' }
+            return `<div class="flex items-center justify-between p-3 border border-border rounded-sm">
               <div>
                 <p class="font-semibold text-heading text-sm">Pedido #${(order.id || '').slice(0, 8)}</p>
-                <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-sm ${order.status === 'delivered' ? 'bg-green-100 text-green-700' : order.status === 'shipped' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}">${order.status || 'pending'}</span>
+                <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-sm ${colors[order.status] || 'bg-border text-muted'}">${order.status || 'pending'}</span>
               </div>
               <p class="font-bold text-primary text-sm">Bs ${(order.total || 0).toFixed(2)}</p>
-            </div>
-          `).join('')
+            </div>`
+          }).join('')
         }
       } catch (e) {
         document.getElementById('recent-orders').innerHTML = '<p class="text-muted text-sm">No hay pedidos aún</p>'
       }
 
       try {
-        const res = await fetch('/api/users/count')
-        if (res.ok) {
-          const data = await res.json()
-          document.getElementById('stat-users').textContent = data.count?.toString() || '0'
-        }
+        const products = await fetchAdminProducts()
+        document.getElementById('stat-products').textContent = Array.isArray(products) ? products.length.toString() : '0'
       } catch (e) {}
     }
   </script>

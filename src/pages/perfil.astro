@@ -17,7 +17,6 @@ import { Icon } from "astro-icon/components"
 
   <div class="container mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Sidebar -->
       <aside class="w-full lg:w-64 shrink-0">
         <nav class="space-y-1 bg-white rounded-sm border border-border p-2">
           <a href="#datos" class="flex items-center gap-3 px-4 py-3 rounded bg-accent/20 text-primary font-semibold transition-colors">
@@ -35,32 +34,27 @@ import { Icon } from "astro-icon/components"
         </nav>
       </aside>
 
-      <!-- Contenido -->
       <main class="flex-1 space-y-8" id="profile-content">
-        <div class="text-center py-10 text-muted" id="profile-loading">
-          <p class="text-lg">Cargando perfil...</p>
-        </div>
+        <div class="text-center py-10 text-muted" id="profile-loading"><p class="text-lg">Cargando perfil...</p></div>
 
-        <!-- Mis Datos -->
+        <!-- Datos -->
         <section id="datos" class="bg-white border border-border rounded-sm p-6 hidden">
           <h2 class="text-xl font-bold text-heading mb-6">Mis Datos</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Nombre completo</label>
-              <input type="text" id="profile-name" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
+              <input type="text" id="profile-name" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Email</label>
-              <input type="email" id="profile-email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
+              <input type="email" id="profile-email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Teléfono</label>
-              <input type="tel" id="profile-phone" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
+              <input type="tel" id="profile-phone" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none" />
             </div>
           </div>
-          <button id="profile-save-btn" class="mt-4 bg-primary text-cream px-6 py-2.5 font-bold uppercase tracking-wider text-sm hover:bg-primary-light transition-colors rounded-sm">
-            Guardar Cambios
-          </button>
+          <button id="profile-save-btn" class="mt-4 bg-primary text-cream px-6 py-2.5 font-bold uppercase tracking-wider text-sm hover:bg-primary-light rounded-sm">Guardar Cambios</button>
           <p id="profile-save-feedback" class="mt-2 text-sm text-green-600 hidden"></p>
         </section>
 
@@ -68,140 +62,188 @@ import { Icon } from "astro-icon/components"
         <section id="direcciones" class="bg-white border border-border rounded-sm p-6 hidden">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-heading">Mis Direcciones</h2>
-            <button class="border-2 border-dashed border-border rounded-sm p-2 text-muted hover:border-accent hover:text-primary transition-colors cursor-pointer" title="Agregar dirección">
+            <button id="addr-add-btn" class="border-2 border-dashed border-border rounded-sm p-2 text-muted hover:border-accent hover:text-primary cursor-pointer" title="Agregar dirección">
               <Icon name="mdi:plus" class="text-xl" />
             </button>
           </div>
-          <div class="border border-border rounded-sm p-4 max-w-lg" id="profile-address-container">
-            <div class="flex justify-between items-start">
-              <div id="profile-address-display">
-                <p class="text-muted text-sm">No has agregado una dirección aún.</p>
-              </div>
-            </div>
-          </div>
+          <div id="profile-address-list" class="space-y-3"><p class="text-muted text-sm">Cargando direcciones...</p></div>
         </section>
 
-        <!-- Mis Pedidos -->
+        <!-- Pedidos -->
         <section id="pedidos" class="bg-white border border-border rounded-sm p-6 hidden">
           <h2 class="text-xl font-bold text-heading mb-6">Mis Pedidos</h2>
-          <div id="profile-orders-container">
-            <p class="text-muted text-sm">Cargando pedidos...</p>
-          </div>
+          <div id="profile-orders-container"><p class="text-muted text-sm">Cargando pedidos...</p></div>
         </section>
       </main>
     </div>
   </div>
-</PublicLayout>
+
+  <!-- Modal dirección -->
+  <div id="addr-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-sm p-6 w-full max-w-md">
+      <h3 class="text-lg font-bold text-heading mb-4" id="addr-modal-title">Nueva Dirección</h3>
+      <input type="hidden" id="addr-edit-id" />
+      <div class="space-y-3">
+        <div><label class="block text-sm font-semibold text-muted mb-1">Nombre/Dirección</label><input id="addr-name" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">Calle y número</label><input id="addr-address" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">Ciudad</label><input id="addr-city" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">Teléfono</label><input id="addr-phone" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button id="addr-save-btn" class="flex-1 bg-primary text-cream py-2 font-bold uppercase tracking-wider text-sm hover:bg-primary-light">Guardar</button>
+        <button id="addr-cancel-btn" class="px-4 py-2 text-muted hover:text-primary">Cancelar</button>
+      </div>
+      <p id="addr-feedback" class="mt-2 text-sm hidden"></p>
+    </div>
+  </div>
 
 <script>
-  import { isAuthenticated, currentUser, fetchWithAuth } from '../lib/api.ts'
+  import { isAuthenticated, currentUser, fetchWithAuth, fetchAddresses, createAddress, updateAddress, deleteAddress } from '../lib/api.ts'
+
+  if (!isAuthenticated()) { window.location.href = '/login' }
+
+  const user = currentUser()
+  const API = { fetchWithAuth, fetchAddresses, createAddress, updateAddress, deleteAddress }
 
   async function loadProfile() {
-    if (!isAuthenticated()) {
-      window.location.href = '/login'
-      return
-    }
-
-    const user = currentUser()
     const loading = document.getElementById('profile-loading')
-    const datosSection = document.getElementById('datos')
-    const direccionesSection = document.getElementById('direcciones')
-    const pedidosSection = document.getElementById('pedidos')
-
-    // Fill from JWT first
     const nameInput = document.getElementById('profile-name') as HTMLInputElement
     const emailInput = document.getElementById('profile-email') as HTMLInputElement
     const phoneInput = document.getElementById('profile-phone') as HTMLInputElement
-    if (user) {
-      nameInput.value = user.name || ''
-      emailInput.value = user.email || ''
-    }
 
-    // Fetch full profile from API
+    if (user) { nameInput.value = user.name || ''; emailInput.value = user.email || '' }
+
     try {
       const profile = await fetchWithAuth('/api/profile')
       if (profile.name) nameInput.value = profile.name
       if (profile.email) emailInput.value = profile.email
       if (profile.phone) phoneInput.value = profile.phone
-      if (profile.address || profile.city) {
-        const addrDisplay = document.getElementById('profile-address-display')
-        addrDisplay.innerHTML = `
-          <p class="font-semibold text-primary">${profile.name || ''}</p>
-          <p class="text-sm text-muted">${profile.address || ''}</p>
-          <p class="text-sm text-muted">${profile.city || ''}</p>
-          <p class="text-sm text-muted">${profile.phone ? 'Tel: ' + profile.phone : ''}</p>
-        `
-      }
-    } catch (e) {
-      console.warn('Profile API unavailable, using JWT data')
-    }
+    } catch (e) { console.warn('Profile API unavailable') }
 
-    // Load orders
-    try {
-      const orders = await fetchWithAuth('/api/orders')
-      const container = document.getElementById('profile-orders-container')
-      if (orders && orders.length > 0) {
-        container.innerHTML = orders.map((order: any) => {
-          const statusColors: Record<string, string> = { 'pending': 'bg-yellow-100 text-yellow-700', 'shipped': 'bg-blue-100 text-blue-700', 'delivered': 'bg-green-100 text-green-700' }
-          const statusClass = statusColors[order.status] || 'bg-border text-muted'
-          const items = order.items || []
-          return `
-            <div class="border border-border rounded-sm p-4 mb-4">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <p class="font-semibold text-primary">Pedido #${(order.id || '').slice(0, 8)}</p>
-                  <p class="text-sm text-muted">${order.created ? new Date(order.created).toLocaleDateString() : ''}</p>
-                </div>
-                <span class="px-3 py-1 text-sm font-semibold rounded-sm ${statusClass}">${order.status || 'pending'}</span>
-              </div>
-              ${Array.isArray(items) ? items.map((item: any) => `
-                <div class="flex items-center gap-3 mb-2">
-                  <div class="text-sm">
-                    <p class="font-semibold">${item.name || 'Producto'} × ${item.quantity || 1}</p>
-                    <p class="text-muted">Bs ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
-                  </div>
-                </div>
-              `).join('') : '<p class="text-sm text-muted">Detalles no disponibles</p>'}
-              <div class="border-t border-border mt-3 pt-3 flex justify-between items-center">
-                <span class="text-sm font-bold text-body">Total: Bs ${(order.total || 0).toFixed(2)}</span>
-              </div>
-            </div>
-          `
-        }).join('')
-      } else {
-        container.innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>'
-      }
-    } catch (e) {
-      document.getElementById('profile-orders-container').innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>'
-    }
+    await loadAddresses()
+    await loadOrders()
 
-    // Show sections
     loading.classList.add('hidden')
-    datosSection.classList.remove('hidden')
-    direccionesSection.classList.remove('hidden')
-    pedidosSection.classList.remove('hidden')
+    document.querySelectorAll('#datos, #direcciones, #pedidos').forEach(el => el.classList.remove('hidden'))
   }
 
-  // Save profile
+  // ── Addresses ──
+  async function loadAddresses() {
+    const container = document.getElementById('profile-address-list')
+    try {
+      const addrs = await fetchAddresses()
+      if (addrs.length === 0) { container.innerHTML = '<p class="text-muted text-sm">No has agregado direcciones aún.</p>'; return }
+      container.innerHTML = addrs.map((a: any) => `
+        <div class="border border-border rounded-sm p-4 flex justify-between items-start">
+          <div>
+            <p class="font-semibold text-primary">${a.name}</p>
+            <p class="text-sm text-muted">${a.address}</p>
+            <p class="text-sm text-muted">${a.city}</p>
+            ${a.phone ? `<p class="text-sm text-muted">Tel: ${a.phone}</p>` : ''}
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button onclick="editAddress('${a.id}','${a.name.replace(/'/g,"\\'")}','${a.address.replace(/'/g,"\\'")}','${a.city.replace(/'/g,"\\'")}','${(a.phone||'').replace(/'/g,"\\'")}')" class="text-sm text-primary hover:text-accent">Editar</button>
+            <button onclick="deleteAddress('${a.id}')" class="text-sm text-muted hover:text-red-500">Eliminar</button>
+          </div>
+        </div>
+      `).join('')
+    } catch (e) { container.innerHTML = '<p class="text-muted text-sm">Error al cargar direcciones.</p>' }
+  }
+
+  ;(window as any).editAddress = (id: string, name: string, address: string, city: string, phone: string) => {
+    (document.getElementById('addr-edit-id') as HTMLInputElement).value = id
+    (document.getElementById('addr-name') as HTMLInputElement).value = name
+    (document.getElementById('addr-address') as HTMLInputElement).value = address
+    (document.getElementById('addr-city') as HTMLInputElement).value = city
+    (document.getElementById('addr-phone') as HTMLInputElement).value = phone
+    document.getElementById('addr-modal-title')!.textContent = 'Editar Dirección'
+    document.getElementById('addr-modal')!.classList.remove('hidden')
+    document.getElementById('addr-modal')!.classList.add('flex')
+  }
+
+  ;(window as any).deleteAddress = async (id: string) => {
+    if (!confirm('¿Eliminar esta dirección?')) return
+    await deleteAddress(id)
+    await loadAddresses()
+  }
+
+  document.getElementById('addr-add-btn')?.addEventListener('click', () => {
+    (document.getElementById('addr-edit-id') as HTMLInputElement).value = ''
+    ;['addr-name','addr-address','addr-city','addr-phone'].forEach(id => (document.getElementById(id) as HTMLInputElement).value = '')
+    document.getElementById('addr-modal-title')!.textContent = 'Nueva Dirección'
+    document.getElementById('addr-modal')!.classList.remove('hidden')
+    document.getElementById('addr-modal')!.classList.add('flex')
+  })
+  document.getElementById('addr-cancel-btn')?.addEventListener('click', () => {
+    document.getElementById('addr-modal')!.classList.add('hidden')
+    document.getElementById('addr-modal')!.classList.remove('flex')
+  })
+  document.getElementById('addr-save-btn')?.addEventListener('click', async () => {
+    const id = (document.getElementById('addr-edit-id') as HTMLInputElement).value
+    const data = {
+      name: (document.getElementById('addr-name') as HTMLInputElement).value,
+      address: (document.getElementById('addr-address') as HTMLInputElement).value,
+      city: (document.getElementById('addr-city') as HTMLInputElement).value,
+      phone: (document.getElementById('addr-phone') as HTMLInputElement).value,
+    }
+    const fb = document.getElementById('addr-feedback')!
+    try {
+      if (id) { await updateAddress(id, data); fb.textContent = '✅ Actualizada' }
+      else { await createAddress(data); fb.textContent = '✅ Creada' }
+      fb.className = 'mt-2 text-sm text-green-600'
+      fb.classList.remove('hidden')
+      setTimeout(() => { fb.classList.add('hidden'); document.getElementById('addr-modal')!.classList.add('hidden'); document.getElementById('addr-modal')!.classList.remove('flex') }, 1000)
+      await loadAddresses()
+    } catch (e: any) { fb.textContent = '❌ ' + (e.message||'error'); fb.className = 'mt-2 text-sm text-red-600'; fb.classList.remove('hidden') }
+  })
+
+  // ── Orders ──
+  async function loadOrders() {
+    const container = document.getElementById('profile-orders-container')
+    try {
+      const orders = await fetchWithAuth('/api/orders')
+      if (!orders || orders.length === 0) { container.innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>'; return }
+      const statusColors: Record<string,string> = { pending:'bg-yellow-100 text-yellow-700', paid:'bg-blue-100 text-blue-700', processing:'bg-purple-100 text-purple-700', shipped:'bg-indigo-100 text-indigo-700', delivered:'bg-green-100 text-green-700', cancelled:'bg-red-100 text-red-600' }
+      container.innerHTML = orders.map((o: any) => {
+        const sc = statusColors[o.status] || 'bg-border text-muted'
+        const items = o.items || []
+        return `<div class="border border-border rounded-sm p-4 mb-4">
+          <div class="flex justify-between items-start mb-3">
+            <div><p class="font-semibold text-primary">Pedido #${(o.id||'').slice(0,8)}</p><p class="text-sm text-muted">${o.created ? new Date(o.created).toLocaleDateString() : ''}</p></div>
+            <span class="px-3 py-1 text-sm font-semibold rounded-sm ${sc}">${o.status||'pending'}</span>
+          </div>
+          ${Array.isArray(items) ? items.map((i:any) => `<div class="flex items-center gap-3 mb-2"><div class="text-sm"><p class="font-semibold">${i.name||'Producto'} × ${i.quantity||1}</p><p class="text-muted">Bs ${((i.price||0)*(i.quantity||1)).toFixed(2)}</p></div></div>`).join('') : '<p class="text-sm text-muted">Detalles no disponibles</p>'}
+          <div class="border-t border-border mt-3 pt-3 flex justify-between items-center">
+            <span class="text-sm font-bold text-body">Total: Bs ${(o.total||0).toFixed(2)}</span>
+            ${o.status === 'pending' ? `<button onclick="cancelOrder('${o.id}')" class="text-sm text-red-500 hover:text-red-700 font-semibold">Cancelar</button>` : ''}
+          </div>
+        </div>`
+      }).join('')
+    } catch (e) { container.innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>' }
+  }
+
+  ;(window as any).cancelOrder = async (id: string) => {
+    if (!confirm('¿Cancelar este pedido?')) return
+    try {
+      const { cancelOrder: co } = await import('../lib/api.ts')
+      await co(id)
+      await loadOrders()
+    } catch(e: any) { alert('Error: ' + (e.message||'desconocido')) }
+  }
+
+  // ── Save profile ──
   document.getElementById('profile-save-btn')?.addEventListener('click', async () => {
     const name = (document.getElementById('profile-name') as HTMLInputElement).value
     const email = (document.getElementById('profile-email') as HTMLInputElement).value
     const phone = (document.getElementById('profile-phone') as HTMLInputElement).value
-    const feedback = document.getElementById('profile-save-feedback')
-
+    const fb = document.getElementById('profile-save-feedback')!
     try {
-      await fetchWithAuth('/api/profile', {
-        method: 'PUT',
-        body: JSON.stringify({ name, email, phone }),
-      })
-      feedback.textContent = '✅ Datos guardados correctamente'
-      feedback.classList.remove('hidden')
-      setTimeout(() => feedback.classList.add('hidden'), 3000)
-    } catch (e: any) {
-      feedback.textContent = '❌ Error al guardar: ' + (e.message || 'desconocido')
-      feedback.classList.remove('hidden')
-    }
+      await fetchWithAuth('/api/profile', { method: 'PUT', body: JSON.stringify({ name, email, phone }) })
+      fb.textContent = '✅ Datos guardados correctamente'; fb.classList.remove('hidden')
+      setTimeout(() => fb.classList.add('hidden'), 3000)
+    } catch (e: any) { fb.textContent = '❌ ' + (e.message||'error'); fb.classList.remove('hidden') }
   })
 
   loadProfile()
 </script>
+</PublicLayout>

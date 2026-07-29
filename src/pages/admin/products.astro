@@ -1,0 +1,144 @@
+---
+import PublicLayout from "../../layouts/PublicLayout.astro"
+import Breadcrumbs from "../../components/ui/Breadcrumbs.astro"
+import { Icon } from "astro-icon/components"
+---
+
+<PublicLayout title="Admin Productos">
+  <div class="bg-primary pt-24 pb-6">
+    <div class="container mx-auto px-4">
+      <Breadcrumbs crumbs={[
+        { label: "Inicio", href: "/" },
+        { label: "Admin", href: "/admin" },
+        { label: "Productos" }
+      ]} />
+      <div class="flex items-center justify-between">
+        <h1 class="font-heading text-4xl text-accent">Gestión de Productos</h1>
+        <button id="new-product-btn" class="bg-cream text-primary px-4 py-2 font-bold uppercase tracking-wider text-sm hover:bg-accent rounded-sm">+ Nuevo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <div id="admin-product-loading" class="text-center py-10 text-muted"><p>Cargando productos...</p></div>
+    <div id="admin-product-table" class="hidden overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b border-border text-left text-sm uppercase tracking-wider text-muted">
+            <th class="pb-3 pr-4">Producto</th>
+            <th class="pb-3 pr-4">Slug</th>
+            <th class="pb-3 pr-4">Precio</th>
+            <th class="pb-3 pr-4">Categoría</th>
+            <th class="pb-3 pr-4">Visible</th>
+            <th class="pb-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="admin-product-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="product-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-sm p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <h3 class="text-lg font-bold text-heading mb-4" id="product-modal-title">Nuevo Producto</h3>
+      <input type="hidden" id="product-edit-slug" />
+      <div class="space-y-3">
+        <div><label class="block text-sm font-semibold text-muted mb-1">Nombre</label><input id="prod-name" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">Slug</label><input id="prod-slug" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-sm font-semibold text-muted mb-1">Precio (Bs)</label><input type="number" id="prod-price" step="0.01" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+          <div><label class="block text-sm font-semibold text-muted mb-1">Categoría</label><input id="prod-category" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        </div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">URL de imagen</label><input id="prod-image" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
+        <div><label class="block text-sm font-semibold text-muted mb-1">Descripción</label><textarea id="prod-description" rows={3} class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none"></textarea></div>
+        <div><label class="flex items-center gap-2 text-sm text-muted cursor-pointer"><input type="checkbox" id="prod-visible" checked class="accent-primary" /> Visible en tienda</label></div>
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button id="prod-save-btn" class="flex-1 bg-primary text-cream py-2 font-bold uppercase tracking-wider text-sm hover:bg-primary-light rounded-sm">Guardar</button>
+        <button id="prod-cancel-btn" class="px-4 py-2 text-muted hover:text-primary">Cancelar</button>
+      </div>
+      <p id="prod-feedback" class="mt-2 text-sm hidden"></p>
+    </div>
+  </div>
+
+<script>
+  import { fetchAdminProducts, createAdminProduct, updateAdminProduct, deleteAdminProduct } from '../../lib/api.ts'
+
+  async function loadProducts() {
+    document.getElementById('admin-product-loading').classList.add('hidden')
+    document.getElementById('admin-product-table').classList.remove('hidden')
+    const tbody = document.getElementById('admin-product-tbody')
+    try {
+      const products = await fetchAdminProducts()
+      tbody.innerHTML = products.map((p: any) => `
+        <tr class="border-b border-border">
+          <td class="py-3 pr-4">
+            <div class="flex items-center gap-3">
+              ${p.image ? `<img src="${p.image}" class="w-10 h-10 object-cover rounded-sm" />` : ''}
+              <span class="font-semibold text-primary">${p.name||'Sin nombre'}</span>
+            </div>
+          </td>
+          <td class="py-3 pr-4 text-sm text-muted">${p.slug||'-'}</td>
+          <td class="py-3 pr-4 font-semibold">Bs ${parseFloat(p.price||0).toFixed(2)}</td>
+          <td class="py-3 pr-4 text-sm text-muted">${p.category||'-'}</td>
+          <td class="py-3 pr-4">${p.visible ? '<span class="text-green-600 font-semibold">Sí</span>' : '<span class="text-red-500 font-semibold">No</span>'}</td>
+          <td class="py-3 flex gap-2">
+            <button onclick="editProduct('${p.slug}')" class="text-sm text-primary hover:text-accent">Editar</button>
+            <button onclick="deleteProduct('${p.slug}')" class="text-sm text-muted hover:text-red-500">Eliminar</button>
+          </td>
+        </tr>
+      `).join('')
+    } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="py-10 text-center text-muted">Error al cargar productos</td></tr>' }
+  }
+
+  function openModal(product?: any) {
+    document.getElementById('product-edit-slug').value = product?.slug || ''
+    ;(document.getElementById('prod-name') as HTMLInputElement).value = product?.name || ''
+    ;(document.getElementById('prod-slug') as HTMLInputElement).value = product?.slug || ''
+    ;(document.getElementById('prod-price') as HTMLInputElement).value = product?.price?.toString() || ''
+    ;(document.getElementById('prod-category') as HTMLInputElement).value = product?.category || ''
+    ;(document.getElementById('prod-image') as HTMLInputElement).value = product?.image || ''
+    ;(document.getElementById('prod-description') as HTMLTextAreaElement).value = product?.description || ''
+    ;(document.getElementById('prod-visible') as HTMLInputElement).checked = product?.visible !== false
+    document.getElementById('product-modal-title')!.textContent = product ? 'Editar Producto' : 'Nuevo Producto'
+    document.getElementById('product-modal')!.classList.remove('hidden')
+    document.getElementById('product-modal')!.classList.add('flex')
+  }
+  ;(window as any).editProduct = (slug: string) => {
+    const row = [...document.querySelectorAll('#admin-product-tbody tr')].find(r => r.querySelector('td:nth-child(2)')?.textContent?.trim() === slug)
+    if (!row) return
+    const cells = row.querySelectorAll('td')
+    openModal({ slug, name: cells[0].textContent?.trim(), price: parseFloat(cells[2].textContent?.replace('Bs ','')||'0'), category: cells[3].textContent?.trim(), visible: cells[4].querySelector('.text-green-600') !== null })
+  }
+  ;(window as any).deleteProduct = async (slug: string) => {
+    if (!confirm('¿Ocultar este producto?')) return
+    try { await deleteAdminProduct(slug); await loadProducts() }
+    catch (e: any) { alert('Error: '+(e.message||'desconocido')) }
+  }
+
+  document.getElementById('new-product-btn')?.addEventListener('click', () => openModal())
+  document.getElementById('prod-cancel-btn')?.addEventListener('click', () => { document.getElementById('product-modal')!.classList.add('hidden'); document.getElementById('product-modal')!.classList.remove('flex') })
+  document.getElementById('prod-save-btn')?.addEventListener('click', async () => {
+    const slug = (document.getElementById('product-edit-slug') as HTMLInputElement).value
+    const data = {
+      name: (document.getElementById('prod-name') as HTMLInputElement).value,
+      slug: (document.getElementById('prod-slug') as HTMLInputElement).value,
+      price: parseFloat((document.getElementById('prod-price') as HTMLInputElement).value) || 0,
+      category: (document.getElementById('prod-category') as HTMLInputElement).value,
+      image: (document.getElementById('prod-image') as HTMLInputElement).value,
+      description: (document.getElementById('prod-description') as HTMLTextAreaElement).value,
+      visible: (document.getElementById('prod-visible') as HTMLInputElement).checked,
+    }
+    const fb = document.getElementById('prod-feedback')!
+    try {
+      if (slug) { await updateAdminProduct(slug, data); fb.textContent = '✅ Actualizado' }
+      else { await createAdminProduct(data); fb.textContent = '✅ Creado' }
+      fb.className = 'mt-2 text-sm text-green-600'; fb.classList.remove('hidden')
+      setTimeout(async () => { fb.classList.add('hidden'); document.getElementById('product-modal')!.classList.add('hidden'); document.getElementById('product-modal')!.classList.remove('flex'); await loadProducts() }, 1000)
+    } catch (e: any) { fb.textContent = '❌ '+(e.message||'error'); fb.className = 'mt-2 text-sm text-red-600'; fb.classList.remove('hidden') }
+  })
+
+  loadProducts()
+</script>
+</PublicLayout>

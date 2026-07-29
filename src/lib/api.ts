@@ -118,7 +118,70 @@ export async function fetchWithAuth(path: string, options?: RequestInit): Promis
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: 'Request failed' }))
-    throw new Error(err.error || 'Request failed')
+    throw new Error(err.error || `HTTP ${res.status}`)
   }
   return res.json()
+}
+
+// ── Addresses ──
+export function fetchAddresses() {
+  return fetchWithAuth('/api/profile/addresses')
+}
+export function createAddress(data: Record<string, any>) {
+  return fetchWithAuth('/api/profile/addresses', { method: 'POST', body: JSON.stringify(data) })
+}
+export function updateAddress(id: string, data: Record<string, any>) {
+  return fetchWithAuth(`/api/profile/addresses/${id}`, { method: 'PUT', body: JSON.stringify(data) })
+}
+export function deleteAddress(id: string) {
+  return fetchWithAuth(`/api/profile/addresses/${id}`, { method: 'DELETE' })
+}
+
+// ── Orders ──
+export function submitOrder(items: any[]) {
+  return fetchWithAuth('/api/orders', { method: 'POST', body: JSON.stringify({ items }) })
+}
+export function getOrder(id: string) {
+  return fetchWithAuth(`/api/orders/${id}`)
+}
+export function cancelOrder(id: string) {
+  return fetchWithAuth(`/api/orders/${id}/cancel`, { method: 'POST' })
+}
+
+// ── Admin ──
+export function fetchAdminProducts() {
+  return fetchWithAuth('/api/admin/products')
+}
+export function createAdminProduct(data: Record<string, any>) {
+  return fetchWithAuth('/api/admin/products', { method: 'POST', body: JSON.stringify(data) })
+}
+export function updateAdminProduct(slug: string, data: Record<string, any>) {
+  return fetchWithAuth(`/api/admin/products/${slug}`, { method: 'PUT', body: JSON.stringify(data) })
+}
+export function deleteAdminProduct(slug: string) {
+  return fetchWithAuth(`/api/admin/products/${slug}`, { method: 'DELETE' })
+}
+export function fetchAdminOrders() {
+  return fetchWithAuth('/api/admin/orders')
+}
+export function fetchAdminOrder(id: string) {
+  return fetchWithAuth(`/api/admin/orders/${id}`)
+}
+export function updateOrderStatus(id: string, status: string) {
+  return fetchWithAuth(`/api/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) })
+}
+export function fetchAdminStats() {
+  return fetchWithAuth('/api/admin/stats')
+}
+export function fetchAdminRecipes() {
+  return fetchWithAuth('/api/admin/recipes')
+}
+export function createAdminRecipe(data: Record<string, any>) {
+  return fetchWithAuth('/api/admin/recipes', { method: 'POST', body: JSON.stringify(data) })
+}
+export function updateAdminRecipe(slug: string, data: Record<string, any>) {
+  return fetchWithAuth(`/api/admin/recipes/${slug}`, { method: 'PUT', body: JSON.stringify(data) })
+}
+export function deleteAdminRecipe(slug: string) {
+  return fetchWithAuth(`/api/admin/recipes/${slug}`, { method: 'DELETE' })
 }
