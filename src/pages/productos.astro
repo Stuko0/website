@@ -152,7 +152,13 @@ const bestSellers = products.slice(0, 5)
                 <a href={`/productos/${p.slug}`} class="font-semibold text-primary hover:text-accent transition-colors">{p.name}</a>
                 <p class="text-sm font-bold text-body mt-1">Bs {p.price.toFixed(2)}</p>
               </div>
-              <button onclick={`window.addToCart('${p.id}')`} class="shrink-0 bg-primary text-cream px-4 py-2 text-sm font-semibold hover:bg-primary-light transition-colors rounded-sm">
+              <button
+                data-add-cart-id={p.id}
+                data-add-cart-name={p.name}
+                data-add-cart-price={p.price}
+                data-add-cart-image={p.image}
+                onclick="window.addToCart(this)"
+                class="shrink-0 bg-primary text-cream px-4 py-2 text-sm font-semibold hover:bg-primary-light transition-colors rounded-sm">
                 Agregar
               </button>
             </div>

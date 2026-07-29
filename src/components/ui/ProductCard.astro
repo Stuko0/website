@@ -28,7 +28,12 @@ const curr = product.currency || 'Bs'
       loading="lazy"
     />
     {product.onSale && <Badge text="Sale" variant="sale" />}
-    <HoverOverlay productSlug={product.slug} productId={product.id} />
+    <HoverOverlay
+      productId={product.slug}
+      productName={product.name}
+      productPrice={product.price}
+      productImage={product.image}
+    />
   </a>
   <div class="p-4 text-center">
     {product.category && (

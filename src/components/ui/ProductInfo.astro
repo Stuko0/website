@@ -58,7 +58,11 @@ const hasVariants = variants && variants.length > 0
       <span class="px-4 py-2 text-lg font-semibold border-x-2 border-border min-w-[3rem] text-center" id="qty-display">1</span>
       <button onclick="window.updateQty(1)" class="px-4 py-2 text-lg hover:bg-accent/20 transition-colors">+</button>
     </div>
-    <button onclick={`window.addToCart('${slug}')`}
+    <button
+      data-add-cart-id={slug}
+      data-add-cart-name={name}
+      data-add-cart-price={price}
+      onclick="window.addToCart(this)"
       class="flex-1 bg-primary text-cream px-6 py-3 font-bold uppercase tracking-wider text-sm hover:bg-primary-light transition-colors">
       Agregar al Carrito
     </button>
@@ -71,9 +75,13 @@ const hasVariants = variants && variants.length > 0
   </a>
 
   <!-- Wishlist -->
-  <button onclick="window.toggleWishlist()" id="wishlist-btn"
+  <button
+    data-wishlist-id={slug}
+    data-wishlist-name={name}
+    data-wishlist-price={price}
+    onclick="window.addToWishlist(this)"
     class="flex items-center gap-2 text-sm text-muted hover:text-accent transition-colors">
-    <svg class="w-5 h-5" id="wishlist-heart" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
     Añadir a favoritos
   </button>
 
@@ -102,17 +110,6 @@ const hasVariants = variants && variants.length > 0
       btn.classList.toggle('hover:border-accent', i !== index)
       btn.classList.toggle('hover:text-primary', i !== index)
     })
-  }
-
-  window.toggleWishlist = () => {
-    const heart = document.getElementById('wishlist-heart')
-    const filled = heart.getAttribute('fill') === 'currentColor'
-    heart.setAttribute('fill', filled ? 'none' : 'currentColor')
-  }
-
-  window.addToCart = (slug: string) => {
-    // Will be wired to cart system
-    window.dispatchEvent(new CustomEvent('cart-add', { detail: { slug, qty } }))
   }
 
   // Random social proof counter

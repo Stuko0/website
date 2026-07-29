@@ -54,3 +54,63 @@ import Footer from '../components/layout/Footer.astro'
     }
   });
 </script>
+
+<script is:inline>
+  // ── Global addToCart ──
+  window.addToCart = function(el) {
+    const id = el.getAttribute('data-add-cart-id')
+    const name = el.getAttribute('data-add-cart-name')
+    const price = parseFloat(el.getAttribute('data-add-cart-price') || '0')
+    const image = el.getAttribute('data-add-cart-image') || ''
+
+    if (!id || !name) return
+
+    // Import dynamically
+    import('/src/lib/cart.ts').then(({ addToCart: addItem, getCartCount }) => {
+      addItem({ id, name, price, image })
+      const count = getCartCount()
+      const badge = document.getElementById('cart-count')
+      const mobileBadge = document.getElementById('mobile-cart-count')
+      if (badge) badge.textContent = count.toString()
+      if (mobileBadge) mobileBadge.textContent = count.toString()
+
+      // Quick feedback
+      el.classList.add('!bg-accent', '!text-primary')
+      setTimeout(() => el.classList.remove('!bg-accent', '!text-primary'), 300)
+    }).catch(() => {
+      // Fallback without dynamic import — use localStorage directly
+      const stored = localStorage.getItem('delcarpio_cart')
+      const cart = stored ? JSON.parse(stored) : []
+      const existing = cart.find((i: any) => i.id === id)
+      if (existing) { existing.quantity += 1 }
+      else { cart.push({ id, name, price, image, quantity: 1 }) }
+      localStorage.setItem('delcarpio_cart', JSON.stringify(cart))
+      window.dispatchEvent(new CustomEvent('cart-updated'))
+    })
+  }
+
+  // ── Global addToWishlist ──
+  window.addToWishlist = function(el) {
+    const id = el.getAttribute('data-wishlist-id')
+    const name = el.getAttribute('data-wishlist-name')
+    const price = parseFloat(el.getAttribute('data-wishlist-price') || '0')
+    const image = el.getAttribute('data-wishlist-image') || ''
+    if (!id || !name) return
+
+    const stored = localStorage.getItem('delcarpio_wishlist')
+    let wishlist = stored ? JSON.parse(stored) : []
+    const exists = wishlist.find((i: any) => i.id === id)
+
+    if (exists) {
+      wishlist = wishlist.filter((i: any) => i.id !== id)
+      el.classList.remove('!bg-red-100')
+      el.querySelector('svg')?.setAttribute('fill', 'none')
+    } else {
+      wishlist.push({ id, name, price, image })
+      el.classList.add('!bg-red-100')
+      el.querySelector('svg')?.setAttribute('fill', 'currentColor')
+    }
+
+    localStorage.setItem('delcarpio_wishlist', JSON.stringify(wishlist))
+  }
+</script>
