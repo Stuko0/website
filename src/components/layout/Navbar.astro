@@ -29,8 +29,12 @@ import { Icon } from 'astro-icon/components'
         <Icon name="mdi:shopping-cart" class="hover:text-accent text-3xl cursor-pointer"/>
         <span id="cart-count" class="absolute -top-2 -right-2 bg-accent text-heading text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
       </a>
-      <a id="account-link" href="/login" class="hover:text-accent transition-colors">
+      <a id="account-link" href="/login" class="hover:text-accent transition-colors relative group">
         <Icon name="mdi:account" class="text-3xl cursor-pointer"/>
+        <div id="desktop-logout" class="hidden absolute right-0 top-full mt-2 bg-white rounded-sm shadow-lg py-1 min-w-[140px] z-50">
+          <a href="/perfil" class="block px-4 py-2 text-sm text-heading hover:bg-accent/10">Mi Perfil</a>
+          <button id="desktop-logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar Sesión</button>
+        </div>
       </a>
     </div>
     <details
@@ -87,6 +91,24 @@ import { Icon } from 'astro-icon/components'
   }
 
   document.getElementById('mobile-logout-btn')?.addEventListener('click', () => {
+    apiLogout()
+  })
+
+  // ── Desktop logout dropdown ──
+  const accountLink = document.getElementById('account-link')
+  const desktopLogout = document.getElementById('desktop-logout')
+  accountLink?.addEventListener('click', (e) => {
+    if (isAuthenticated()) {
+      e.preventDefault()
+      desktopLogout.classList.toggle('hidden')
+    }
+  })
+  document.addEventListener('click', (e) => {
+    if (desktopLogout && !desktopLogout.classList.contains('hidden') && !accountLink?.contains(e.target as Node)) {
+      desktopLogout.classList.add('hidden')
+    }
+  })
+  document.getElementById('desktop-logout-btn')?.addEventListener('click', () => {
     apiLogout()
   })
 

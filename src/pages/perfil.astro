@@ -28,9 +28,9 @@ import { Icon } from "astro-icon/components"
           <a href="#pedidos" class="flex items-center gap-3 px-4 py-3 rounded text-muted hover:bg-accent/10 hover:text-primary transition-colors">
             <Icon name="mdi:package-variant-closed" class="text-xl" /> Mis Pedidos
           </a>
-          <a href="/login" class="flex items-center gap-3 px-4 py-3 rounded text-muted hover:bg-red-50 hover:text-red-600 transition-colors">
+          <button id="logout-btn" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded text-muted hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer">
             <Icon name="mdi:logout" class="text-xl" /> Cerrar Sesión
-          </a>
+          </button>
         </nav>
       </aside>
 
@@ -242,6 +242,12 @@ import { Icon } from "astro-icon/components"
       fb.textContent = '✅ Datos guardados correctamente'; fb.classList.remove('hidden')
       setTimeout(() => fb.classList.add('hidden'), 3000)
     } catch (e: any) { fb.textContent = '❌ ' + (e.message||'error'); fb.classList.remove('hidden') }
+  })
+
+  // ── Logout ──
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('sb_token')
+    window.location.href = '/login'
   })
 
   loadProfile()
