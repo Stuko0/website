@@ -35,88 +35,173 @@ import { Icon } from "astro-icon/components"
         </nav>
       </aside>
 
-      <!-- Content -->
-      <main class="flex-1 space-y-8">
-        <!-- Datos -->
-        <section id="datos" class="bg-white border border-border rounded-sm p-6">
+      <!-- Contenido -->
+      <main class="flex-1 space-y-8" id="profile-content">
+        <div class="text-center py-10 text-muted" id="profile-loading">
+          <p class="text-lg">Cargando perfil...</p>
+        </div>
+
+        <!-- Mis Datos -->
+        <section id="datos" class="bg-white border border-border rounded-sm p-6 hidden">
           <h2 class="text-xl font-bold text-heading mb-6">Mis Datos</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Nombre completo</label>
-              <input type="text" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" value="Juan Pérez" />
+              <input type="text" id="profile-name" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Email</label>
-              <input type="email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" value="juan@ejemplo.com" />
+              <input type="email" id="profile-email" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-muted mb-1">Teléfono</label>
-              <input type="tel" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" value="+591 70000000" />
+              <input type="tel" id="profile-phone" class="w-full px-4 py-2.5 border border-border rounded-sm focus:border-accent focus:outline-none transition-colors" />
             </div>
           </div>
-          <button class="mt-4 bg-primary text-cream px-6 py-2.5 font-bold uppercase tracking-wider text-sm hover:bg-primary-light transition-colors rounded-sm">
+          <button id="profile-save-btn" class="mt-4 bg-primary text-cream px-6 py-2.5 font-bold uppercase tracking-wider text-sm hover:bg-primary-light transition-colors rounded-sm">
             Guardar Cambios
           </button>
+          <p id="profile-save-feedback" class="mt-2 text-sm text-green-600 hidden"></p>
         </section>
 
         <!-- Direcciones -->
-        <section id="direcciones" class="bg-white border border-border rounded-sm p-6">
+        <section id="direcciones" class="bg-white border border-border rounded-sm p-6 hidden">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-heading">Mis Direcciones</h2>
             <button class="border-2 border-dashed border-border rounded-sm p-2 text-muted hover:border-accent hover:text-primary transition-colors cursor-pointer" title="Agregar dirección">
               <Icon name="mdi:plus" class="text-xl" />
             </button>
           </div>
-          <div class="border border-border rounded-sm p-4 max-w-lg">
+          <div class="border border-border rounded-sm p-4 max-w-lg" id="profile-address-container">
             <div class="flex justify-between items-start">
-              <div>
-                <p class="font-semibold text-primary">Juan Pérez</p>
-                <p class="text-sm text-muted">Calle Principal #123</p>
-                <p class="text-sm text-muted">La Paz, Bolivia</p>
-                <p class="text-sm text-muted">Tel: +591 70000000</p>
-              </div>
-              <div class="flex gap-2">
-                <button class="text-sm text-primary hover:text-accent transition-colors">Editar</button>
-                <button class="text-sm text-muted hover:text-red-500 transition-colors">Eliminar</button>
+              <div id="profile-address-display">
+                <p class="text-muted text-sm">No has agregado una dirección aún.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Pedidos -->
-        <section id="pedidos" class="bg-white border border-border rounded-sm p-6">
+        <!-- Mis Pedidos -->
+        <section id="pedidos" class="bg-white border border-border rounded-sm p-6 hidden">
           <h2 class="text-xl font-bold text-heading mb-6">Mis Pedidos</h2>
-          <div class="space-y-4">
-            <div class="border border-border rounded-sm p-4">
-              <div class="flex justify-between items-start mb-3">
-                <div>
-                  <p class="font-semibold text-primary">Pedido #DC-2025-001</p>
-                  <p class="text-sm text-muted">15 de mayo, 2025</p>
-                </div>
-                <span class="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-sm">Entregado</span>
-              </div>
-              <div class="flex items-center gap-3 mb-2">
-                <img src="https://images.pexels.com/photos/6261615/pexels-photo-6261615.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&dpr=1" class="w-12 h-12 object-cover rounded-sm" />
-                <div class="text-sm">
-                  <p class="font-semibold">Chocolate Amargo 70% × 2</p>
-                  <p class="text-muted">Bs 70.00</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="https://images.pexels.com/photos/7538069/pexels-photo-7538069.jpeg?auto=compress&cs=tinysrgb&w=60&h=60&dpr=1" class="w-12 h-12 object-cover rounded-sm" />
-                <div class="text-sm">
-                  <p class="font-semibold">Bombones Rellenos × 1</p>
-                  <p class="text-muted">Bs 65.00</p>
-                </div>
-              </div>
-              <div class="border-t border-border mt-3 pt-3 flex justify-between items-center">
-                <span class="text-sm font-bold text-body">Total: Bs 150.00</span>
-                <a href="#" class="text-sm text-primary hover:text-accent font-semibold transition-colors">Ver detalle →</a>
-              </div>
-            </div>
+          <div id="profile-orders-container">
+            <p class="text-muted text-sm">Cargando pedidos...</p>
           </div>
         </section>
       </main>
     </div>
   </div>
 </PublicLayout>
+
+<script>
+  import { isAuthenticated, currentUser, fetchWithAuth } from '../lib/api.ts'
+
+  async function loadProfile() {
+    if (!isAuthenticated()) {
+      window.location.href = '/login'
+      return
+    }
+
+    const user = currentUser()
+    const loading = document.getElementById('profile-loading')
+    const datosSection = document.getElementById('datos')
+    const direccionesSection = document.getElementById('direcciones')
+    const pedidosSection = document.getElementById('pedidos')
+
+    // Fill from JWT first
+    const nameInput = document.getElementById('profile-name') as HTMLInputElement
+    const emailInput = document.getElementById('profile-email') as HTMLInputElement
+    const phoneInput = document.getElementById('profile-phone') as HTMLInputElement
+    if (user) {
+      nameInput.value = user.name || ''
+      emailInput.value = user.email || ''
+    }
+
+    // Fetch full profile from API
+    try {
+      const profile = await fetchWithAuth('/api/profile')
+      if (profile.name) nameInput.value = profile.name
+      if (profile.email) emailInput.value = profile.email
+      if (profile.phone) phoneInput.value = profile.phone
+      if (profile.address || profile.city) {
+        const addrDisplay = document.getElementById('profile-address-display')
+        addrDisplay.innerHTML = `
+          <p class="font-semibold text-primary">${profile.name || ''}</p>
+          <p class="text-sm text-muted">${profile.address || ''}</p>
+          <p class="text-sm text-muted">${profile.city || ''}</p>
+          <p class="text-sm text-muted">${profile.phone ? 'Tel: ' + profile.phone : ''}</p>
+        `
+      }
+    } catch (e) {
+      console.warn('Profile API unavailable, using JWT data')
+    }
+
+    // Load orders
+    try {
+      const orders = await fetchWithAuth('/api/orders')
+      const container = document.getElementById('profile-orders-container')
+      if (orders && orders.length > 0) {
+        container.innerHTML = orders.map((order: any) => {
+          const statusColors: Record<string, string> = { 'pending': 'bg-yellow-100 text-yellow-700', 'shipped': 'bg-blue-100 text-blue-700', 'delivered': 'bg-green-100 text-green-700' }
+          const statusClass = statusColors[order.status] || 'bg-border text-muted'
+          const items = order.items || []
+          return `
+            <div class="border border-border rounded-sm p-4 mb-4">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <p class="font-semibold text-primary">Pedido #${(order.id || '').slice(0, 8)}</p>
+                  <p class="text-sm text-muted">${order.created ? new Date(order.created).toLocaleDateString() : ''}</p>
+                </div>
+                <span class="px-3 py-1 text-sm font-semibold rounded-sm ${statusClass}">${order.status || 'pending'}</span>
+              </div>
+              ${Array.isArray(items) ? items.map((item: any) => `
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="text-sm">
+                    <p class="font-semibold">${item.name || 'Producto'} × ${item.quantity || 1}</p>
+                    <p class="text-muted">Bs ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
+                  </div>
+                </div>
+              `).join('') : '<p class="text-sm text-muted">Detalles no disponibles</p>'}
+              <div class="border-t border-border mt-3 pt-3 flex justify-between items-center">
+                <span class="text-sm font-bold text-body">Total: Bs ${(order.total || 0).toFixed(2)}</span>
+              </div>
+            </div>
+          `
+        }).join('')
+      } else {
+        container.innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>'
+      }
+    } catch (e) {
+      document.getElementById('profile-orders-container').innerHTML = '<p class="text-muted text-sm">No tienes pedidos aún.</p>'
+    }
+
+    // Show sections
+    loading.classList.add('hidden')
+    datosSection.classList.remove('hidden')
+    direccionesSection.classList.remove('hidden')
+    pedidosSection.classList.remove('hidden')
+  }
+
+  // Save profile
+  document.getElementById('profile-save-btn')?.addEventListener('click', async () => {
+    const name = (document.getElementById('profile-name') as HTMLInputElement).value
+    const email = (document.getElementById('profile-email') as HTMLInputElement).value
+    const phone = (document.getElementById('profile-phone') as HTMLInputElement).value
+    const feedback = document.getElementById('profile-save-feedback')
+
+    try {
+      await fetchWithAuth('/api/profile', {
+        method: 'PUT',
+        body: JSON.stringify({ name, email, phone }),
+      })
+      feedback.textContent = '✅ Datos guardados correctamente'
+      feedback.classList.remove('hidden')
+      setTimeout(() => feedback.classList.add('hidden'), 3000)
+    } catch (e: any) {
+      feedback.textContent = '❌ Error al guardar: ' + (e.message || 'desconocido')
+      feedback.classList.remove('hidden')
+    }
+  })
+
+  loadProfile()
+</script>
