@@ -130,7 +130,8 @@ export function userRole(): string {
 }
 
 export function isAdmin(): boolean {
-  return userRole() === 'admin'
+  const role = userRole()
+  return role === 'admin' || role === 'owner'
 }
 
 // ── Authenticated fetch with auto-refresh ──
