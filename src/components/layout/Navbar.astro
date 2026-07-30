@@ -55,12 +55,26 @@ import { Icon } from 'astro-icon/components'
 </nav>
 
 <script>
-  import { isAuthenticated, isAdmin, currentUser, logout as apiLogout } from '../../lib/api.ts'
+  import { isAuthenticated, isAdmin, currentUser, logout as apiLogout, fetchWithAuth } from '../../lib/api.ts'
   import { getCartCount } from '../../lib/cart.ts'
 
-  function updateNav() {
+  let cachedRole: string | null = null
+
+  async function fetchUserRole(): Promise<string> {
+    if (cachedRole) return cachedRole
+    try {
+      const profile = await fetchWithAuth('/api/profile')
+      cachedRole = profile.role || 'customer'
+      return cachedRole!
+    } catch {
+      const user = currentUser()
+      return user?.role || 'customer'
+    }
+  }
+
+  function updateNavWithRole(role: string) {
+    const isAdminOrOwner = role === 'admin' || role === 'owner'
     const loggedIn = isAuthenticated()
-    const admin = isAdmin()
     const accountLink = document.getElementById('account-link')
     const menuItems = document.getElementById('desktop-menu-items')
     const mobileLoginLink = document.getElementById('mobile-login-link')
@@ -71,29 +85,33 @@ import { Icon } from 'astro-icon/components'
     if (menuItems) {
       menuItems.innerHTML = ''
       if (loggedIn) {
-        if (admin) {
+        if (isAdminOrOwner) {
           menuItems.innerHTML += '<a href="/admin" class="block px-4 py-2 text-sm font-semibold text-accent hover:bg-accent/10">Panel Admin</a>'
         }
         menuItems.innerHTML += '<a href="/perfil" class="block px-4 py-2 text-sm text-heading hover:bg-accent/10">Mi Perfil</a>'
         menuItems.innerHTML += '<button class="desktop-logout-btn block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar Sesión</button>'
-        // Wire logout buttons
         menuItems.querySelectorAll('.desktop-logout-btn').forEach(btn => btn.addEventListener('click', apiLogout))
       }
     }
 
     // Account icon: redirect based on role
     if (loggedIn) {
-      accountLink.href = admin ? '/admin' : '/perfil'
+      accountLink.href = isAdminOrOwner ? '/admin' : '/perfil'
       mobileLoginLink.classList.add('hidden')
       mobileProfileLink.classList.remove('hidden')
       mobileLogoutBtn.classList.remove('hidden')
-      mobileProfileLink.href = admin ? '/admin' : '/perfil'
+      mobileProfileLink.href = isAdminOrOwner ? '/admin' : '/perfil'
     } else {
       accountLink.href = '/login'
       mobileLoginLink.classList.remove('hidden')
       mobileProfileLink.classList.add('hidden')
       mobileLogoutBtn.classList.add('hidden')
     }
+  }
+
+  async function updateNav() {
+    const role = await fetchUserRole()
+    updateNavWithRole(role)
   }
 
   function updateCartCount() {
