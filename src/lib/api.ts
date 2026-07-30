@@ -108,6 +108,10 @@ export function isAdmin(): boolean {
 
 export async function fetchWithAuth(path: string, options?: RequestInit): Promise<any> {
   const token = getToken()
+  if (!token) {
+    redirectToLogin()
+    throw new Error('no token')
+  }
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
@@ -116,11 +120,22 @@ export async function fetchWithAuth(path: string, options?: RequestInit): Promis
       ...options?.headers,
     },
   })
+  if (res.status === 401) {
+    clearToken()
+    redirectToLogin()
+    throw new Error('Sesión expirada. Inicia sesión nuevamente.')
+  }
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Request failed' }))
+    const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }))
     throw new Error(err.error || `HTTP ${res.status}`)
   }
   return res.json()
+}
+
+function redirectToLogin() {
+  if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+    window.location.href = '/login'
+  }
 }
 
 // ── Addresses ──
