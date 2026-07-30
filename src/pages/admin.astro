@@ -118,12 +118,27 @@ import { Icon } from "astro-icon/components"
     const adminContent = document.getElementById('admin-content')
     const noAccess = document.getElementById('no-access')
 
-    if (!isAuthenticated() || !isAdmin()) {
+    // Check role from JWT first, then try API
+    async function checkAccess() {
+      if (!isAuthenticated()) {
+        adminContent.classList.add('hidden')
+        noAccess.classList.remove('hidden')
+        return false
+      }
+      if (isAdmin()) return true
+      // Fallback: check via API (role might have been updated in DB but JWT is stale)
+      try {
+        const profile = await fetchWithAuth('/api/profile')
+        if (profile.role === 'admin' || profile.role === 'owner') {
+          return true
+        }
+      } catch {}
       adminContent.classList.add('hidden')
       noAccess.classList.remove('hidden')
-    } else {
-      loadStats()
+      return false
     }
+
+    checkAccess().then(ok => { if (ok) loadStats() })
 
     async function loadStats() {
       try {
