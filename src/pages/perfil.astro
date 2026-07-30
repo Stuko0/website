@@ -246,9 +246,7 @@ import { Icon } from "astro-icon/components"
 
   // ── Logout ──
   document.getElementById('logout-btn')?.addEventListener('click', () => {
-    localStorage.removeItem('sb_token')
-    localStorage.removeItem('delcarpio_cart')
-    localStorage.removeItem('delcarpio_wishlist')
+    ['sb_token', 'sb_refresh_token', 'sb_expires_at', 'delcarpio_cart', 'delcarpio_wishlist'].forEach(k => localStorage.removeItem(k))
     window.location.href = '/login'
   })
 
