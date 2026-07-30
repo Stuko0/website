@@ -87,7 +87,6 @@ import { Icon } from "astro-icon/components"
         <div><label class="block text-sm font-semibold text-muted mb-1">Nombre/Dirección</label><input id="addr-name" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
         <div><label class="block text-sm font-semibold text-muted mb-1">Calle y número</label><input id="addr-address" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
         <div><label class="block text-sm font-semibold text-muted mb-1">Ciudad</label><input id="addr-city" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
-        <div><label class="block text-sm font-semibold text-muted mb-1">Teléfono</label><input id="addr-phone" class="w-full px-3 py-2 border border-border rounded-sm focus:border-accent focus:outline-none" /></div>
       </div>
       <div class="flex gap-2 mt-4">
         <button id="addr-save-btn" class="flex-1 bg-primary text-cream py-2 font-bold uppercase tracking-wider text-sm hover:bg-primary-light">Guardar</button>
@@ -139,10 +138,9 @@ import { Icon } from "astro-icon/components"
             <p class="font-semibold text-primary">${a.name}</p>
             <p class="text-sm text-muted">${a.address}</p>
             <p class="text-sm text-muted">${a.city}</p>
-            ${a.phone ? `<p class="text-sm text-muted">Tel: ${a.phone}</p>` : ''}
           </div>
           <div class="flex gap-2 shrink-0">
-            <button onclick="editAddress('${a.id}','${a.name.replace(/'/g,"\\'")}','${a.address.replace(/'/g,"\\'")}','${a.city.replace(/'/g,"\\'")}','${(a.phone||'').replace(/'/g,"\\'")}')" class="text-sm text-primary hover:text-accent">Editar</button>
+            <button onclick="editAddress('${a.id}','${a.name.replace(/'/g,"\\'")}','${a.address.replace(/'/g,"\\'")}','${a.city.replace(/'/g,"\\'")}')" class="text-sm text-primary hover:text-accent">Editar</button>
             <button onclick="deleteAddress('${a.id}')" class="text-sm text-muted hover:text-red-500">Eliminar</button>
           </div>
         </div>
@@ -150,12 +148,11 @@ import { Icon } from "astro-icon/components"
     } catch (e) { container.innerHTML = '<p class="text-muted text-sm">No has agregado direcciones aún.</p>' }
   }
 
-  ;(window as any).editAddress = (id: string, name: string, address: string, city: string, phone: string) => {
+  ;(window as any).editAddress = (id: string, name: string, address: string, city: string) => {
     (document.getElementById('addr-edit-id') as HTMLInputElement).value = id
-    (document.getElementById('addr-name') as HTMLInputElement).value = name
-    (document.getElementById('addr-address') as HTMLInputElement).value = address
-    (document.getElementById('addr-city') as HTMLInputElement).value = city
-    (document.getElementById('addr-phone') as HTMLInputElement).value = phone
+    ;(document.getElementById('addr-name') as HTMLInputElement).value = name
+    ;(document.getElementById('addr-address') as HTMLInputElement).value = address
+    ;(document.getElementById('addr-city') as HTMLInputElement).value = city
     document.getElementById('addr-modal-title')!.textContent = 'Editar Dirección'
     document.getElementById('addr-modal')!.classList.remove('hidden')
     document.getElementById('addr-modal')!.classList.add('flex')
@@ -169,7 +166,7 @@ import { Icon } from "astro-icon/components"
 
   document.getElementById('addr-add-btn')?.addEventListener('click', () => {
     (document.getElementById('addr-edit-id') as HTMLInputElement).value = ''
-    ;['addr-name','addr-address','addr-city','addr-phone'].forEach(id => (document.getElementById(id) as HTMLInputElement).value = '')
+    ;['addr-name','addr-address','addr-city'].forEach(id => (document.getElementById(id) as HTMLInputElement).value = '')
     document.getElementById('addr-modal-title')!.textContent = 'Nueva Dirección'
     document.getElementById('addr-modal')!.classList.remove('hidden')
     document.getElementById('addr-modal')!.classList.add('flex')
@@ -184,7 +181,6 @@ import { Icon } from "astro-icon/components"
       name: (document.getElementById('addr-name') as HTMLInputElement).value,
       address: (document.getElementById('addr-address') as HTMLInputElement).value,
       city: (document.getElementById('addr-city') as HTMLInputElement).value,
-      phone: (document.getElementById('addr-phone') as HTMLInputElement).value,
     }
     const fb = document.getElementById('addr-feedback')!
     try {
