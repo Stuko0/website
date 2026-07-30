@@ -130,7 +130,7 @@ import { Icon } from "astro-icon/components"
         const stats = await fetchAdminStats()
         document.getElementById('stat-products').textContent = (stats.products || 0).toString()
         document.getElementById('stat-orders').textContent = (stats.orders || 0).toString()
-        document.getElementById('stat-users').textContent = (stats.profiles || 0).toString()
+        document.getElementById('stat-users').textContent = (stats.users || 0).toString()
         document.getElementById('stat-revenue').textContent = `Bs ${(stats.revenue || 0).toFixed(2)}`
       } catch (e) {}
 
